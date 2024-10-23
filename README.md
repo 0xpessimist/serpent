@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://i.imgur.com/cfOLrdW.png" width="150" />
+  <img src="https://i.imgur.com/cfOLrdW.png" width="200" />
 </div>
 
 ## Serpent Router
