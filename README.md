@@ -1,66 +1,19 @@
-## Foundry
+<div align="center">
+  <img src="https://i.imgur.com/cfOLrdW.png" width="200" />
+</div>
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+## Serpent Router
+A modular and gas-efficient router that facilitates token and ether swaps through multiple protocols via swappers. Designed for DEX aggregators to perform multi-route swaps.
 
-Foundry consists of:
-
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
-
-## Documentation
-
-https://book.getfoundry.sh/
-
-## Usage
-
-### Build
-
-```shell
-$ forge build
-```
-
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
+* 🛠️ - Still in making
+* ✔ - Finished
+```ml
+src
+├─ Serpent 🛠️ — "Serpent contract interface"
+├─ WrapperFactory 🛠️ — "Allows deployment of new wrappers for protocols using Uniswap V2 & V3 Router interfaces to be used in Serpent"
+└─ interfaces
+   └─ ISerpent ✔ — "Interface of Serpent contract"
+└─ wrappers
+   └─ V2Wrapper ✔ — "Acts as a wrapper for routers of protocols using UniswapV2Router interfaces to be used in Serpent"
+   └─ V3Wrapper 🛠️ — "Acts as a wrapper for routers of protocols using SwapRouter (Uniswap V3) interfaces to be used in Serpent"
 ```
