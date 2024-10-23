@@ -2,7 +2,7 @@
   <img src="https://i.imgur.com/cfOLrdW.png" width="200" />
 </div>
 
-## Serpent Router
+## Serpent Router 🐍⛽✨
 A modular and gas-efficient router that facilitates token and ether swaps through multiple protocols via swappers. Designed for DEX aggregators to perform multi-route swaps.
 
 * 🛠️ - Still in making
