@@ -21,7 +21,7 @@ import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
 
 /**
  * @title   Serpent V2Wrapper
- * @dev     Acts as a wrapper for routers of protocols using Uniswap V2 & V3 Router interfaces.
+ * @dev     Acts as a wrapper for routers of protocols using UniswapV2Router interfaces to be used in Serpent.
  * @author  Eren <https://twitter.com/notereneth>
  */
 contract V2Wrapper {

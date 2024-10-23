@@ -4,7 +4,6 @@ pragma solidity 0.8.23;
 import {Ownable} from "@solady/auth/Ownable.sol";
 //import {IERC20Permit} from "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Permit.sol";
 import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
-import {LibClone} from "@solady/utils/LibClone.sol";
 
 /*´:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚*\
  * SERPENT                                    *

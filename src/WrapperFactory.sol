@@ -22,7 +22,7 @@ import {V2Wrapper} from "src/wrappers/V2Wrapper.sol";
 
 /**
  * @title   Serpent Wrapper Factory
- * @dev     Allows deployment of new wrappers for protocols using Uniswap V2 & V3 Router interfaces with ease.
+ * @dev     Allows deployment of new wrappers for protocols using Uniswap V2 & V3 Router interfaces to be used in Serpent.
  * @notice  Uses CREATE3 to deploy new swapper contracts deterministically.
  * @author  Eren <https://twitter.com/notereneth>
  */
