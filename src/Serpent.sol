@@ -61,8 +61,6 @@ contract Serpent is Ownable {
     address public fee_handler;
 
     /// @notice RouteParam is a struct that contains route parameters.
-    /// @dev This struct holds data for route operations. The struct is not packed and, therefore
-    /// not gas efficient. It will temporarily remain as this due to the SDK used for testing.
     struct RouteParam {
         address token_in;
         address token_out;
@@ -72,16 +70,7 @@ contract Serpent is Ownable {
         bytes1 swap_type; // 0x01: ethToToken, 0x02: tokenToEth, 0x03: tokenToToken
     }
 
-    /// @notice SwapType is an enum that represents the type of swap
-    enum SwapType {
-        ethToToken,
-        tokenToEth,
-        tokenToToken
-    }
-
     /// @notice SwapParams is a struct that contains swap parameters.
-    /// @dev This struct holds data for swap operations. The struct is not packed and, therefore
-    /// not gas efficient. It will temporarily remain as this due to the SDK used for testing.
     struct SwapParams {
         address token_in;
         address token_out;
@@ -89,7 +78,6 @@ contract Serpent is Ownable {
         uint256 protocol_id;
         address pool_address;
         bytes1 swap_type;
-        uint256[] extra_data;
     }
 
     /// @notice The mapping of protocol IDs to swap handler addresses.
