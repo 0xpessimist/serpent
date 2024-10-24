@@ -265,7 +265,9 @@ contract Serpent is Ownable {
      * @param swapper_address The address of the proxy to perform the swap.
      * @param amount_in The amount of input tokens for the swap.
      */
-    function _call_swapper(SwapParams memory swap_parameter, address swapper_address, uint256 amount_in) internal {
+    function _delegatecall_swapper(SwapParams memory swap_parameter, address swapper_address, uint256 amount_in)
+        internal
+    {
         bytes4 selector;
 
         if (swap_parameter.swap_type == 0x01) {
@@ -280,7 +282,6 @@ contract Serpent is Ownable {
             let ptr := mload(0x40)
 
             mstore(ptr, selector)
-
             mstore(add(ptr, 4), mload(swap_parameter)) // token_in
             mstore(add(ptr, 36), mload(add(swap_parameter, 32))) // token_out
             mstore(add(ptr, 68), amount_in) // amount_in
@@ -288,19 +289,17 @@ contract Serpent is Ownable {
             mstore(add(ptr, 132), mload(add(swap_parameter, 64))) // pool_address
 
             let success :=
-                call(
+                delegatecall(
                     gas(),
                     swapper_address,
-                    0,
                     ptr,
                     164, // (4 + 5 * 32 bytes)
                     0,
                     0
                 )
 
-            // Handle failure
             if iszero(success) {
-                mstore(0x00, 0x9e2b49c6) // `SwapFailed()` selector
+                mstore(0x00, 0x9e2b49c6) // `SwapFailed()`
                 revert(0x1c, 0x04)
             }
         }
