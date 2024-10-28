@@ -42,6 +42,7 @@ contract Serpent is Ownable {
 
     - Add permit
     - V3Wrapper
+    - Add unit & fork tests
 
     */
 
@@ -236,8 +237,50 @@ contract Serpent is Ownable {
      * @return output_amount The amount of the output token received.
      */
     function _swap_operation(RouteParam memory route, SwapParams[] memory swap_parameters) internal returns (uint256) {
+        assembly {
+            // Check if token_in is equal to token_out
+            if eq(mload(route), mload(add(route, 32))) {
+                mstore(0x00, 0x41c0e1b5) // `TokenAddressesAreSame()`
+                revert(0x1c, 0x04)
+            }
+
+            // Check if swap_parameters length is zero
+            if iszero(mload(swap_parameters)) {
+                mstore(0x00, 0x2f4c5ea3) // `NoSwapsProvided()`
+                revert(0x1c, 0x04)
+            }
+
+            // Check if amount_in is zero
+            if iszero(mload(add(route, 64))) {
+                mstore(0x00, 0x03d7d16c) // `AmountInZero()`
+                revert(0x1c, 0x04)
+            }
+
+            // Check if min_received is zero
+            if iszero(mload(add(route, 96))) {
+                mstore(0x00, 0x174d1b78) // `MinReceivedZero()`
+                revert(0x1c, 0x04)
+            }
+
+            // Check if destination address is zero
+            if iszero(mload(add(route, 128))) {
+                mstore(0x00, 0x4e487b71) // `DestinationZero()`
+                revert(0x1c, 0x04)
+            }
+        }
+
+        if (route.swap_type != 0x01) {
+            SafeTransferLib.safeTransferFrom(route.token_in, msg.sender, address(this), route.amount_in);
+        }
+
+        _swap(swap_parameters, route);
+
+        // @todo implement fee handling
+
         //emit Swap(msg.sender, route.amount_in, output_amount, route.token_in, route.token_out, route.destination);
         //return output_amount;
+
+        // if 0x02 or 0x03 get the funds with safetransferfrom (or consumes same gas with lt)
     }
 
     /**
