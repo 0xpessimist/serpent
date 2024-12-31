@@ -2,7 +2,6 @@
 pragma solidity 0.8.23;
 
 import {Ownable} from "@solady/auth/Ownable.sol";
-//import {IERC20Permit} from "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Permit.sol";
 import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
 
 /*´:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚*\
@@ -26,8 +25,6 @@ import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
  * @dev     A modular and gas-efficient router that facilitates token and ether swaps through multiple protocols via swappers.
  * @dev     Specifically designed for dex aggregators to perform multi-route swaps.
  * @dev     Allows implementing custom swappers.
- * @dev     Only the owner can set/remove swap handlers and adjust fees.
- * @dev     Ensures minimum received amount and proper fee handling in swaps.
  * @dev     Emits events for each swap operation.
  * @dev     Uses custom errors for specific failure scenarios.
  * @dev     Uses Ownable for ownership and SafeTransferLib for transfer operations.
@@ -36,30 +33,12 @@ import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
  * @author  Eren <https://twitter.com/notereneth>
  */
 contract Serpent is Ownable {
-    /*
-
-    @todo
-
-    - Add permit
-    - V3Wrapper
-    - Add unit & fork tests
-
-    */
-
     /*´:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:°.°+𓆗*•´.*:*/
     /*                      STATE VARIABLES                       */
     /*.:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:°.°+𓆗*•´.*:*/
 
-    /// @notice The fee extension.
-    uint256 private constant FEE_EXTENSION = 1000000;
-
-    /// @notice The rate extension.
-    uint256 private constant RATE_EXTENSION = 1000000;
-
-    /// @notice The router fee for multi-route swaps.
-    uint256 public router_fee;
-    /// @notice The fee handler address.
-    address public fee_handler;
+    // @note Storing and loading structs aren't gas efficient, it is currently being kept for ease of testing.
+    // Ideally, will move to a system utilizing hashes.
 
     /// @notice RouteParam is a struct that contains route parameters.
     struct RouteParam {
@@ -106,14 +85,13 @@ contract Serpent is Ownable {
     error MinReceivedAmountNotReached();
     error SwapFailed();
     error ArrayLengthsMismatching();
-    error CallFailed();
 
     /*´:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:°.°+𓆗*•´.*:*/
     /*                     SPECIAL FUNCTIONS                      */
     /*.:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:°.°+𓆗*•´.*:*/
 
-    constructor(address _owner) payable {
-        _initializeOwner(_owner);
+    constructor(address owner) payable {
+        _initializeOwner(owner);
     }
 
     receive() external payable {}
@@ -123,29 +101,42 @@ contract Serpent is Ownable {
     /*.:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:°.°+𓆗*•´.*:*/
 
     /**
-     * @notice  Sets a new router fee.
-     * @param   new_fee  The new fee to set for multi-route swaps.
-     *
-     * @dev     IMPORTANT: Fee extension should be considered. If a fee of 0.02% is desired, new_fee should be set to 200.
+     * @dev  Performs a swap using the provided route and swap parameters.
+     * @param   route  The route parameters for the swap.
+     * @param   swap_parameters  The parameters for the swaps to perform.
+     * @return  The amount of the output token received.
      */
-    function setRouterFee(uint256 new_fee) external payable onlyOwner {
-        assembly {
-            sstore(router_fee.slot, new_fee)
+    function swap(RouteParam calldata route, SwapParams[] calldata swap_parameters)
+        external
+        payable
+        returns (uint256)
+    {
+        if (route.swap_type != 0x01) {
+            SafeTransferLib.safeTransferFrom(route.token_in, msg.sender, address(this), route.amount_in);
         }
+        return _orchestrate(route, swap_parameters);
     }
 
     /**
-     * @dev  Sets a new fee handler address.
-     * @param   new_fee_handler  The new fee handler address.
+     * @dev  Performs a swap using the provided route and swap parameters with permit signatures.
+     * @param   route  The route parameters for the swap.
+     * @param   swap_parameters  The parameters for the swaps to perform.
+     * @param   deadline  The deadline for the permit signature.
+     * @param   v  The v value of the permit signature.
+     * @param   r  The r value of the permit signature.
+     * @param   s  The s value of the permit signature.
+     * @return  The amount of the output token received.
      */
-    function setFeeHandler(address new_fee_handler) external payable onlyOwner {
-        assembly {
-            if iszero(new_fee_handler) {
-                mstore(0x00, 0x4e487b71) // `AddressZero()`
-                revert(0x1c, 0x04)
-            }
-            sstore(fee_handler.slot, new_fee_handler)
-        }
+    function swapWithPermit(
+        RouteParam calldata route,
+        SwapParams[] calldata swap_parameters,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) external payable returns (uint256) {
+        SafeTransferLib.permit2(route.token_in, msg.sender, address(this), route.amount_in, deadline, v, r, s);
+        return _orchestrate(route, swap_parameters);
     }
 
     /**
@@ -170,7 +161,7 @@ contract Serpent is Ownable {
     }
 
     /**
-     * @dev  Removes the swap handler for the specified protocol ID.
+     * @dev   Removes the swap handler for the specified protocol ID.
      * @param   protocol_id  The protocol ID to remove the handler for.
      */
     function removeSwapper(uint256 protocol_id) external payable onlyOwner {
@@ -181,33 +172,29 @@ contract Serpent is Ownable {
     }
 
     /**
-     * @dev  Performs a swap using the provided route and swap parameters.
-     * @param   route  The route parameters for the swap.
-     * @param   swap_parameters  The parameters for the swaps to perform.
-     * @return  The amount of the output token received.
+     * @dev  Sweeps stuck tokens from the contract.
+     * @param   token  The address of the token to sweep.
+     * @param   amount  The amount of the token to sweep.
+     * @param   receiver  The address to receive the tokens.
      */
-    function swap(RouteParam calldata route, SwapParams[] calldata swap_parameters)
-        external
-        payable
-        returns (uint256)
-    {
-        return _swap_operation(route, swap_parameters);
+    function sweepStuckToken(address token, uint256 amount, address receiver) external payable onlyOwner {
+        SafeTransferLib.safeTransfer(token, receiver, amount);
     }
 
-    // @todo permit swap
-
-    function sweepStuckToken(address _token, uint256 _amount, address _receiver) external payable onlyOwner {
-        SafeTransferLib.safeTransfer(_token, _receiver, _amount);
-    }
-
-    function sweepStuckTokens(address[] calldata _tokens, uint256[] calldata _amounts, address _receiver)
+    /**
+     * @dev  Sweeps stuck multiple tokens from the contract.
+     * @param   tokens  The addresses of the tokens to sweep.
+     * @param   amounts  The amounts of the tokens to sweep.
+     * @param   receiver  The address to receive the tokens.
+     */
+    function sweepStuckTokens(address[] calldata tokens, uint256[] calldata amounts, address receiver)
         external
         payable
         onlyOwner
     {
         assembly {
-            let tokensLength := calldataload(_tokens.offset)
-            let amountsLength := calldataload(_amounts.offset)
+            let tokensLength := calldataload(tokens.offset)
+            let amountsLength := calldataload(amounts.offset)
 
             if iszero(eq(tokensLength, amountsLength)) {
                 mstore(0x00, 0x78e87335) // `ArrayLengthsMismatching()`
@@ -215,15 +202,17 @@ contract Serpent is Ownable {
             }
         }
 
-        for (uint256 i = 0; i < _tokens.length; i++) {
-            SafeTransferLib.safeTransfer(_tokens[i], _receiver, _amounts[i]);
+        for (uint256 i = 0; i < tokens.length; i++) {
+            SafeTransferLib.safeTransfer(tokens[i], receiver, amounts[i]);
         }
     }
 
-    // :°•𓆗°+.𓆚•´.𓆚:˚.°*𓆓˚•´.°:°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:°•.°+𓆗*•´.*:
-
-    function sweepStuckEther(address _receiver) external payable onlyOwner {
-        SafeTransferLib.safeTransferAllETH(_receiver);
+    /**
+     * @dev  Sweeps stuck ether from the contract.
+     * @param   receiver  The address to receive the ether.
+     */
+    function sweepStuckEther(address receiver) external payable onlyOwner {
+        SafeTransferLib.safeTransferAllETH(receiver);
     }
 
     /*´:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:°.°+𓆗*•´.*:*/
@@ -236,7 +225,7 @@ contract Serpent is Ownable {
      * @param swap_parameters The parameters for the swaps to perform.
      * @return output_amount The amount of the output token received.
      */
-    function _swap_operation(RouteParam memory route, SwapParams[] memory swap_parameters) internal returns (uint256) {
+    function _orchestrate(RouteParam memory route, SwapParams[] memory swap_parameters) internal returns (uint256) {
         assembly {
             // Check if token_in is equal to token_out
             if eq(mload(route), mload(add(route, 32))) {
@@ -269,18 +258,31 @@ contract Serpent is Ownable {
             }
         }
 
-        if (route.swap_type != 0x01) {
-            SafeTransferLib.safeTransferFrom(route.token_in, msg.sender, address(this), route.amount_in);
-        }
-
         _swap(swap_parameters, route);
 
-        // @todo implement fee handling
+        uint256 output_amount;
 
-        //emit Swap(msg.sender, route.amount_in, output_amount, route.token_in, route.token_out, route.destination);
-        //return output_amount;
-
-        // if 0x02 or 0x03 get the funds with safetransferfrom (or consumes same gas with lt)
+        if (route.swap_type == 0x02) {
+            assembly {
+                output_amount := selfbalance()
+                if lt(output_amount, mload(add(route, 0x60))) {
+                    mstore(0x00, 0x1f3b3b3b) // `MinReceivedAmountNotReached()`
+                    revert(0x1c, 0x04)
+                }
+            }
+            SafeTransferLib.safeTransferETH(route.destination, address(this).balance);
+        } else {
+            assembly {
+                let ptr := mload(0x40)
+                mstore(ptr, 0x70a08231) // keccak256("balanceOf(address)")
+                mstore(add(ptr, 4), address())
+                if iszero(staticcall(gas(), mload(add(route, 32)), ptr, 36, ptr, 32)) { revert(0, 0) }
+                output_amount := mload(ptr)
+            }
+            SafeTransferLib.safeTransfer(route.token_out, route.destination, output_amount);
+        }
+        emit Swap(msg.sender, route.amount_in, output_amount, route.token_in, route.token_out, route.destination);
+        return output_amount;
     }
 
     /**
@@ -288,7 +290,47 @@ contract Serpent is Ownable {
      * @param swap_parameters The parameters for the swaps to perform.
      * @param route The route parameters for the swap.
      */
-    function _swap(SwapParams[] memory swap_parameters, RouteParam memory route) internal {}
+    function _swap(SwapParams[] memory swap_parameters, RouteParam memory route) internal {
+        uint256 bln;
+        uint256 index;
+
+        while (index < swap_parameters.length) {
+            SwapParams memory swap_p = swap_parameters[index];
+            uint256 amount_in;
+
+            if (route.token_in == swap_p.token_in) {
+                assembly {
+                    amount_in := div(mul(calldataload(add(route, 0x40)), mload(add(swap_p, 0x40))), 1000000)
+                } // (amount * rate) / RATE_EXTENSION;
+            } else {
+                uint256 j = index;
+                bln = 0;
+                while (j > 0) {}
+                unchecked {
+                    --j;
+                }
+                SwapParams memory prev_swap = swap_parameters[j];
+                if (prev_swap.token_in == swap_p.token_in) {
+                    break;
+                } else {
+                    assembly {
+                        let ptr := mload(0x40)
+                        mstore(ptr, 0x70a08231) // keccak256("balanceOf(address)")
+                        mstore(add(ptr, 4), address())
+                        if iszero(staticcall(gas(), mload(swap_p), ptr, 36, ptr, 32)) { revert(0, 0) }
+                        bln := mload(ptr)
+                    }
+                }
+                assembly {
+                    amount_in := div(mul(bln, mload(add(swap_p, 0x40))), 1000000)
+                }
+            }
+            _delegatecall_swapper(swap_p, swappers[swap_p.protocol_id], amount_in);
+            unchecked {
+                ++index;
+            }
+        }
+    }
 
     /**
      * @dev Calls the relevant swapper to perform the swap operation.
@@ -333,35 +375,6 @@ contract Serpent is Ownable {
                 mstore(0x00, 0x9e2b49c6) // `SwapFailed()`
                 revert(0x1c, 0x04)
             }
-        }
-    }
-
-    /**
-     * @dev Calculates the output amount and fee based on the input amount and fee percentage.
-     * @param amount The input amount to calculate the output for.
-     * @param fee The fee percentage to apply.
-     * @return output_amount The output amount after the fee is applied.
-     */
-    function _calculate_output_with_fee(uint256 amount, uint256 fee)
-        internal
-        pure
-        returns (uint256 output_amount, uint256 output_fee)
-    {
-        assembly {
-            output_fee := div(mul(amount, fee), FEE_EXTENSION)
-            output_amount := sub(amount, output_fee)
-        }
-    }
-
-    /**
-     * @dev Multiplies the amount by the rate and divides by 100 to get the percentage.
-     * @param amount The input amount to calculate the percentage for.
-     * @param rate The rate to apply. 1-100
-     * @return result The calculated percentage of the amount.
-     */
-    function _calculate_percentage_of_amount(uint256 amount, uint256 rate) internal pure returns (uint256 result) {
-        assembly {
-            result := div(mul(amount, rate), RATE_EXTENSION)
         }
     }
 }
