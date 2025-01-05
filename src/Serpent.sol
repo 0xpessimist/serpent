@@ -143,11 +143,11 @@ contract Serpent is Ownable {
      * @dev  Adds a new swap handler for the specified protocol ID.
      * @dev     Reverts if the new address is the zero address or if a handler is already set for the protocol ID.
      * @param   protocol_id  The protocol ID to set the handler for.
-     * @param   handler  The address of the new handler.
+     * @param   swapper  The address of the new swap handler.
      */
-    function addSwapper(uint256 protocol_id, address handler) external payable onlyOwner {
+    function addSwapper(uint256 protocol_id, address swapper) external payable onlyOwner {
         assembly {
-            if iszero(handler) {
+            if iszero(swapper) {
                 mstore(0x00, 0x4e487b71) // `AddressZero()`
                 revert(0x1c, 0x04)
             }
@@ -156,13 +156,13 @@ contract Serpent is Ownable {
                 mstore(0x00, 0x582ef2b8) // `AlreadySet()`
                 revert(0x1c, 0x04)
             }
-            sstore(slot, handler)
+            sstore(slot, swapper)
         }
     }
 
     /**
-     * @dev   Removes the swap handler for the specified protocol ID.
-     * @param   protocol_id  The protocol ID to remove the handler for.
+     * @dev   Removes the swapper for the specified protocol ID.
+     * @param   protocol_id  The protocol ID to remove the swap handler for.
      */
     function removeSwapper(uint256 protocol_id) external payable onlyOwner {
         assembly {

@@ -3,6 +3,7 @@ pragma solidity 0.8.23;
 
 import {CREATE3} from "@solady/utils/CREATE3.sol";
 import {V2Wrapper} from "src/wrappers/V2Wrapper.sol";
+import {V3Wrapper} from "src/wrappers/V3Wrapper.sol";
 
 /*´:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚*\
  * SERPENT                                    *
@@ -31,28 +32,40 @@ contract WrapperFactory {
     mapping(bytes32 => address) private wrappers;
 
     /// @notice Deploys a new wrapper contract using CREATE3.
-    /// @param _isV2 Boolean indicating whether the wrapper is for UniswapV2Router or SwapRouter(Uniswap V3).
-    /// @param _protocol_router_address Address of the protocol router.
-    /// @param _salt User-provided salt combined with msg.sender for uniqueness.
+    /// @param isV2 Boolean indicating whether the wrapper is for UniswapV2Router or SwapRouter(Uniswap V3).
+    /// @param protocol_router_address Address of the protocol router.
+    /// @param salt User-provided salt combined with msg.sender for uniqueness.
     /// @return wrapper address of the deployed contract.
-    function deployWrapper(bool _isV2, address _protocol_router_address, bytes12 _salt)
+    function deployWrapper(bool isV2, address protocol_router_address, address weth, bytes12 salt)
         external
         returns (address wrapper)
     {
-        if (_isV2) {
-            bytes32 salt = bytes32(abi.encodePacked(msg.sender, _salt));
+        bytes32 packedSalt = bytes32(abi.encodePacked(msg.sender, salt));
 
-            wrapper = CREATE3.deployDeterministic(
-                abi.encodePacked(type(V2Wrapper).creationCode, abi.encode(_protocol_router_address)), salt
-            );
-
-            wrappers[salt] = wrapper;
-        } else {
-            // @todo v3
+        assembly {
+            let wr := sload(add(wrappers.slot, packedSalt))
+            if not(iszero(wr)) {
+                revert(0, 0)
+            }
         }
+
+        if (isV2) {
+            wrapper = CREATE3.deployDeterministic(
+                abi.encodePacked(type(V2Wrapper).creationCode, abi.encode(protocol_router_address)), packedSalt
+            );
+        } else {
+            wrapper = CREATE3.deployDeterministic(
+                abi.encodePacked(type(V3Wrapper).creationCode, abi.encode(protocol_router_address, weth)), packedSalt
+            );
+        }
+
+        wrappers[packedSalt] = wrapper;
     }
 
-    function getWrapper(bytes12 _salt) external view returns (address wrapper) {
-        wrapper = wrappers[bytes32(abi.encodePacked(msg.sender, _salt))];
+    /// @notice Fetches the wrapper address associated with the salt.
+    /// @param salt The salt used to deploy the wrapper.
+    /// @return wrapper address of the deployed wrapper.
+    function getWrapper(bytes12 salt) external view returns (address wrapper) {
+        wrapper = wrappers[bytes32(abi.encodePacked(msg.sender, salt))];
     }
 }
