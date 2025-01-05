@@ -3,9 +3,26 @@ pragma solidity 0.8.23;
 
 import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
 
+/*´:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚*\
+ * SERPENT                                    *
+ *    _________         _________             *
+ *   /         \       /         \            *
+ *  /  /~~~~~\  \     /  /~~~~~\  \           *
+ *  |  |     |  |     |  |     |  |           *
+ *  |  |     |  |     |  |     |  |           *
+ *  |  |     |  |     |  |     |  |         / *
+ *  |  |     |  |     |  |     |  |       //  *
+ * (o  o)    \  \_____/  /     \  \_____/ /   *
+ *  \__/      \         /       \        /    *
+ *   |         ~~~~~~~~~         ~~~~~~~~     *
+ *   ^                                        *
+ *                                 V3 WRAPPER *
+\*°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:.+𓆗*•´.•.:*/
+
 /**
  * @title   Serpent V3Wrapper
  * @dev     Acts as a wrapper for routers of protocols using SwapRouter (Uniswap V3) interfaces to be used in Serpent.
+ * @author  Eren <https://twitter.com/notereneth>
  */
 contract V3Wrapper {
     address public immutable PROTOCOL_ROUTER_ADDRESS;
