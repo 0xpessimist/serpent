@@ -38,16 +38,19 @@ contract WrapperFactory {
     /// @return wrapper address of the deployed contract.
     function deployWrapper(bool isV2, address protocol_router_address, address weth, bytes12 salt)
         external
-        returns (address wrapper)
+        returns (address)
     {
         bytes32 packedSalt = bytes32(abi.encodePacked(msg.sender, salt));
 
+        address wrapper;
+
+        /*
         assembly {
             let wr := sload(add(wrappers.slot, packedSalt))
-            if not(iszero(wr)) {
-                revert(0, 0)
-            }
+            if not(iszero(wr)) { revert(0, 0) }
         }
+        */ 
+        // @todo fix the above check, not working as expected
 
         if (isV2) {
             wrapper = CREATE3.deployDeterministic(
@@ -60,6 +63,8 @@ contract WrapperFactory {
         }
 
         wrappers[packedSalt] = wrapper;
+
+        return wrapper;
     }
 
     /// @notice Fetches the wrapper address associated with the salt.

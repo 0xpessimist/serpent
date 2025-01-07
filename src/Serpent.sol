@@ -4,6 +4,10 @@ pragma solidity 0.8.23;
 import {Ownable} from "@solady/auth/Ownable.sol";
 import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
 
+interface IERC20 {
+    function balanceOf(address account) external view returns (uint256);
+}
+
 /*´:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚*\
  * SERPENT                                    *
  *    _________         _________             *
@@ -145,7 +149,8 @@ contract Serpent is Ownable {
      * @param   protocol_id  The protocol ID to set the handler for.
      * @param   swapper  The address of the new swap handler.
      */
-    function addSwapper(uint256 protocol_id, address swapper) external payable onlyOwner {
+
+    /*    function addSwapper(uint256 protocol_id, address swapper) external payable onlyOwner {
         assembly {
             if iszero(swapper) {
                 mstore(0x00, 0x4e487b71) // `AddressZero()`
@@ -158,6 +163,17 @@ contract Serpent is Ownable {
             }
             sstore(slot, swapper)
         }
+    }
+    */
+
+    function addSwapper(uint256 protocol_id, address swapper) external payable onlyOwner {
+        if (swapper == address(0)) {
+            revert AddressZero();
+        }
+        if (swappers[protocol_id] != address(0)) {
+            revert AlreadySet();
+        }
+        swappers[protocol_id] = swapper;
     }
 
     /**
@@ -272,13 +288,7 @@ contract Serpent is Ownable {
             }
             SafeTransferLib.safeTransferETH(route.destination, address(this).balance);
         } else {
-            assembly {
-                let ptr := mload(0x40)
-                mstore(ptr, 0x70a08231) // keccak256("balanceOf(address)")
-                mstore(add(ptr, 4), address())
-                if iszero(staticcall(gas(), mload(add(route, 32)), ptr, 36, ptr, 32)) { revert(0, 0) }
-                output_amount := mload(ptr)
-            }
+            output_amount = IERC20(route.token_out).balanceOf(address(this)); // @todo 1
             SafeTransferLib.safeTransfer(route.token_out, route.destination, output_amount);
         }
         emit Swap(msg.sender, route.amount_in, output_amount, route.token_in, route.token_out, route.destination);
@@ -299,32 +309,31 @@ contract Serpent is Ownable {
             uint256 amount_in;
 
             if (route.token_in == swap_p.token_in) {
-                assembly {
-                    amount_in := div(mul(calldataload(add(route, 0x40)), mload(add(swap_p, 0x40))), 1000000)
-                } // (amount * rate) / RATE_EXTENSION;
+                amount_in = route.amount_in * swap_p.rate / 1000000;
             } else {
-                uint256 j = index;
-                bln = 0;
-                while (j > 0) {}
-                unchecked {
-                    --j;
-                }
-                SwapParams memory prev_swap = swap_parameters[j];
-                if (prev_swap.token_in == swap_p.token_in) {
-                    break;
-                } else {
-                    assembly {
-                        let ptr := mload(0x40)
-                        mstore(ptr, 0x70a08231) // keccak256("balanceOf(address)")
-                        mstore(add(ptr, 4), address())
-                        if iszero(staticcall(gas(), mload(swap_p), ptr, 36, ptr, 32)) { revert(0, 0) }
-                        bln := mload(ptr)
-                    }
-                }
+                // @todo not checked yet, probably not working well
                 assembly {
+                    let j := index
+                    for {} gt(j, 0) { j := sub(j, 1) } {
+                        let prevSwapOffset := mul(sub(j, 1), 0x20)
+                        let prevTokenIn := mload(add(swap_parameters, add(prevSwapOffset, 0x00)))
+
+                        if eq(prevTokenIn, mload(add(swap_p, 0x00))) { break }
+
+                        mstore(0x00, 0x70a08231)
+                        mstore(0x04, address())
+
+                        let success := staticcall(gas(), mload(add(swap_p, 0x00)), 0x00, 0x24, 0x00, 0x20)
+
+                        if iszero(success) { revert(0, 0) }
+
+                        bln := mload(0x00)
+                    }
+
                     amount_in := div(mul(bln, mload(add(swap_p, 0x40))), 1000000)
                 }
             }
+
             _delegatecall_swapper(swap_p, swappers[swap_p.protocol_id], amount_in);
             unchecked {
                 ++index;
