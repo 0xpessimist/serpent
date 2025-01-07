@@ -49,7 +49,7 @@ contract WrapperFactory {
             let wr := sload(add(wrappers.slot, packedSalt))
             if not(iszero(wr)) { revert(0, 0) }
         }
-        */ 
+        */
         // @todo fix the above check, not working as expected
 
         if (isV2) {

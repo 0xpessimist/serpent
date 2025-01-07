@@ -288,7 +288,7 @@ contract Serpent is Ownable {
             }
             SafeTransferLib.safeTransferETH(route.destination, address(this).balance);
         } else {
-            output_amount = IERC20(route.token_out).balanceOf(address(this)); // @todo 1
+            output_amount = IERC20(route.token_out).balanceOf(address(this)); // @todo will be implemented in assembly
             SafeTransferLib.safeTransfer(route.token_out, route.destination, output_amount);
         }
         emit Swap(msg.sender, route.amount_in, output_amount, route.token_in, route.token_out, route.destination);
@@ -330,7 +330,19 @@ contract Serpent is Ownable {
                         bln := mload(0x00)
                     }
 
-                    amount_in := div(mul(bln, mload(add(swap_p, 0x40))), 1000000)
+                    /* IN SOLIDITY
+                    while (j > 0) {
+                        SwapParams memory prev_swap = swap_parameters[j - 1];
+                        if (prev_swap.token_in == swap_p.token_in) {
+                            break;
+                        } else {
+                            balance = IERC20(swap_p.token_in).balanceOf(address(this));
+                        }
+                        j--;
+                    }
+                    */
+
+                    amount_in := div(mul(bln, mload(add(swap_p, 0x40))), 1000000) // probably not accessing swap_p correctly, will fix
                 }
             }
 
