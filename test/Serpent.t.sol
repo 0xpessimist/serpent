@@ -43,13 +43,16 @@ contract SerpentTest is Test {
         serpent = new Serpent(admin);
         factory = new WrapperFactory();
 
-        bytes12 salt = 0x1234567890abcdef12345678;
+        // salt for deterministic deployment
+        bytes32 salt = "ExampleBytes32";
 
         // Deploy a wrapper for PunkSwap Router
         address punkSwapper = factory.deployWrapper(true, punkSwapRouter, weth, salt);
 
         // Add the PunkSwap swapper to the serpent
         serpent.addSwapper(1, punkSwapper);
+
+        assertEq(factory.getWrapper(salt), punkSwapper);
 
         vm.stopPrank();
     }
