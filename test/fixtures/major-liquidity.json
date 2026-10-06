@@ -1,0 +1,418 @@
+{
+  "schemaVersion": 1,
+  "chains": {
+    "1": {
+      "wrappedNative": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "routes": [
+        {
+          "source": "curve-stable-ng",
+          "request": {
+            "chainId": 1,
+            "source": "curve-stable-ng",
+            "tokenIn": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+            "tokenOut": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+            "amountIn": "10000000",
+            "inputDecimals": 6,
+            "outputDecimals": 6,
+            "destination": "0x000000000000000000000000000000000000bEEF",
+            "liquiditySources": [
+              "curve-stable-ng"
+            ]
+          },
+          "blockNumber": "26136409",
+          "blockHash": "0x73c7029499e7fa1ee721cdf544bcc627cab9eef6058e6fc698749e669a2dfe9e",
+          "amountOut": "10001111",
+          "pools": [
+            {
+              "kind": "curve-stable-ng",
+              "address": "0xEf3a1CaE64848F9eB25022de4DCb77b40afFe419",
+              "token0": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+              "token1": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+              "factory": "0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf",
+              "router": "0x6A8cbed756804B16E05E741eDaBd5cB544AE21bf",
+              "protocolId": "7",
+              "coins": [
+                "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+                "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f",
+                "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+                "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+                "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
+                "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8",
+                "0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD"
+              ]
+            }
+          ],
+          "compiled": {
+            "route": {
+              "token_in": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+              "token_out": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+              "amount_in": "10000000",
+              "min_received": "9951105",
+              "destination": "0x000000000000000000000000000000000000bEEF",
+              "swap_type": "0x03"
+            },
+            "steps": [
+              {
+                "token_in": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                "token_out": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+                "rate": 1000000,
+                "protocol_id": "7",
+                "pool_address": "0xEf3a1CaE64848F9eB25022de4DCb77b40afFe419",
+                "swap_type": "0x03"
+              }
+            ]
+          },
+          "stepCount": 1
+        }
+      ]
+    },
+    "137": {
+      "wrappedNative": "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+      "routes": [
+        {
+          "source": "curve-stable-ng",
+          "request": {
+            "chainId": 137,
+            "source": "curve-stable-ng",
+            "tokenIn": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+            "tokenOut": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+            "amountIn": "10000000",
+            "inputDecimals": 6,
+            "outputDecimals": 6,
+            "destination": "0x000000000000000000000000000000000000bEEF",
+            "liquiditySources": [
+              "curve-stable-ng"
+            ]
+          },
+          "blockNumber": "95081039",
+          "blockHash": "0x0e81c10b14b4877656aeeb59afa557f57b10d96f4c28487ea596e2131b8a710d",
+          "amountOut": "738576",
+          "pools": [
+            {
+              "kind": "curve-stable-ng",
+              "address": "0xedd00Beae3f91a0845D1A5d6013F2637E3C608C9",
+              "token0": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+              "token1": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+              "factory": "0x1764ee18e8B3ccA4787249Ceb249356192594585",
+              "router": "0x1764ee18e8B3ccA4787249Ceb249356192594585",
+              "protocolId": "6",
+              "coins": [
+                "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+                "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359"
+              ]
+            }
+          ],
+          "compiled": {
+            "route": {
+              "token_in": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+              "token_out": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+              "amount_in": "10000000",
+              "min_received": "734883",
+              "destination": "0x000000000000000000000000000000000000bEEF",
+              "swap_type": "0x03"
+            },
+            "steps": [
+              {
+                "token_in": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+                "token_out": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+                "rate": 1000000,
+                "protocol_id": "6",
+                "pool_address": "0xedd00Beae3f91a0845D1A5d6013F2637E3C608C9",
+                "swap_type": "0x03"
+              }
+            ]
+          },
+          "stepCount": 1
+        }
+      ]
+    },
+    "999": {
+      "wrappedNative": "0x5555555555555555555555555555555555555555",
+      "routes": [
+        {
+          "source": "curve-stable-ng",
+          "request": {
+            "chainId": 999,
+            "source": "curve-stable-ng",
+            "tokenIn": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+            "tokenOut": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
+            "amountIn": "10000000",
+            "inputDecimals": 6,
+            "outputDecimals": 6,
+            "destination": "0x000000000000000000000000000000000000bEEF",
+            "liquiditySources": [
+              "curve-stable-ng"
+            ]
+          },
+          "blockNumber": "47854625",
+          "blockHash": "0x85f0c1a13514283cf277a8c66c1f44520a2f0faef49ab1629720c365f513e288",
+          "amountOut": "9933891",
+          "pools": [
+            {
+              "kind": "curve-stable-ng",
+              "address": "0x3CA81ba994C523948dAE48E8f2E7F327f9218029",
+              "token0": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+              "token1": "0x8fF0dd9f9C40a0d76eF1BcFAF5f98c1610c74Bd8",
+              "factory": "0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22",
+              "router": "0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22",
+              "protocolId": "5",
+              "coins": [
+                "0x8fF0dd9f9C40a0d76eF1BcFAF5f98c1610c74Bd8",
+                "0xb88339CB7199b77E23DB6E890353E22632Ba630f"
+              ]
+            },
+            {
+              "kind": "curve-stable-ng",
+              "address": "0x3Bee53e887D52d9CBa177396AA44810904D501fF",
+              "token0": "0x8fF0dd9f9C40a0d76eF1BcFAF5f98c1610c74Bd8",
+              "token1": "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
+              "factory": "0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22",
+              "router": "0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22",
+              "protocolId": "5",
+              "coins": [
+                "0x8fF0dd9f9C40a0d76eF1BcFAF5f98c1610c74Bd8",
+                "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34"
+              ]
+            },
+            {
+              "kind": "curve-stable-ng",
+              "address": "0xC8819A6cE017139CceB5710b44be104667187A7C",
+              "token0": "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
+              "token1": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
+              "factory": "0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22",
+              "router": "0x604388Bb1159AFd21eB5191cE22b4DeCdEE2Ae22",
+              "protocolId": "5",
+              "coins": [
+                "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
+                "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34"
+              ]
+            }
+          ],
+          "compiled": {
+            "route": {
+              "token_in": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+              "token_out": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
+              "amount_in": "10000000",
+              "min_received": "9884221",
+              "destination": "0x000000000000000000000000000000000000bEEF",
+              "swap_type": "0x03"
+            },
+            "steps": [
+              {
+                "token_in": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+                "token_out": "0x8fF0dd9f9C40a0d76eF1BcFAF5f98c1610c74Bd8",
+                "rate": 1000000,
+                "protocol_id": "5",
+                "pool_address": "0x3CA81ba994C523948dAE48E8f2E7F327f9218029",
+                "swap_type": "0x03"
+              },
+              {
+                "token_in": "0x8fF0dd9f9C40a0d76eF1BcFAF5f98c1610c74Bd8",
+                "token_out": "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
+                "rate": 1000000,
+                "protocol_id": "5",
+                "pool_address": "0x3Bee53e887D52d9CBa177396AA44810904D501fF",
+                "swap_type": "0x03"
+              },
+              {
+                "token_in": "0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34",
+                "token_out": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
+                "rate": 1000000,
+                "protocol_id": "5",
+                "pool_address": "0xC8819A6cE017139CceB5710b44be104667187A7C",
+                "swap_type": "0x03"
+              }
+            ]
+          },
+          "stepCount": 3
+        },
+        {
+          "source": "projectx-v3",
+          "request": {
+            "chainId": 999,
+            "source": "projectx-v3",
+            "tokenIn": "0x5555555555555555555555555555555555555555",
+            "tokenOut": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+            "amountIn": "1000000000000000000",
+            "inputDecimals": 18,
+            "outputDecimals": 6,
+            "destination": "0x000000000000000000000000000000000000bEEF",
+            "liquiditySources": [
+              "projectx-v3"
+            ]
+          },
+          "blockNumber": "47854631",
+          "blockHash": "0xf66d8b1941fec0bb949ae61ecdf756696c0d0c0d4bb6a01f4e05e23368650331",
+          "amountOut": "91864900",
+          "pools": [
+            {
+              "kind": "v3",
+              "address": "0x6c9A33E3b592C0d65B3Ba59355d5Be0d38259285",
+              "token0": "0x5555555555555555555555555555555555555555",
+              "token1": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+              "protocolId": "6",
+              "router": "0x1EbDFC75FfE3ba3de61E7138a3E8706aC841Af9B",
+              "quoter": "0x239F11a7A3E08f2B8110D4CA9F6B95d4c8865258",
+              "fee": 500
+            }
+          ],
+          "compiled": {
+            "route": {
+              "token_in": "0x5555555555555555555555555555555555555555",
+              "token_out": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+              "amount_in": "1000000000000000000",
+              "min_received": "91405575",
+              "destination": "0x000000000000000000000000000000000000bEEF",
+              "swap_type": "0x03"
+            },
+            "steps": [
+              {
+                "token_in": "0x5555555555555555555555555555555555555555",
+                "token_out": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+                "rate": 1000000,
+                "protocol_id": "6",
+                "pool_address": "0x6c9A33E3b592C0d65B3Ba59355d5Be0d38259285",
+                "swap_type": "0x03"
+              }
+            ]
+          },
+          "stepCount": 1
+        }
+      ]
+    },
+    "8453": {
+      "wrappedNative": "0x4200000000000000000000000000000000000006",
+      "routes": [
+        {
+          "source": "aerodrome",
+          "request": {
+            "chainId": 8453,
+            "source": "aerodrome",
+            "tokenIn": "0x4200000000000000000000000000000000000006",
+            "tokenOut": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "amountIn": "1000000000000000",
+            "inputDecimals": 18,
+            "outputDecimals": 6,
+            "destination": "0x000000000000000000000000000000000000bEEF",
+            "liquiditySources": [
+              "aerodrome"
+            ]
+          },
+          "blockNumber": "52268689",
+          "blockHash": "0x9fb19d63d3505022f3402d1a3f0ac483fe6d5a2a7e329e41f9602e68a8c16544",
+          "amountOut": "2686905",
+          "pools": [
+            {
+              "kind": "solidly",
+              "address": "0xcDAC0d6c6C59727a65F871236188350531885C43",
+              "token0": "0x4200000000000000000000000000000000000006",
+              "token1": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "factory": "0x420DD381b31aEf6683db6B902084cB0FFECe40Da",
+              "stable": false,
+              "router": "0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43",
+              "protocolId": "13"
+            }
+          ],
+          "compiled": {
+            "route": {
+              "token_in": "0x4200000000000000000000000000000000000006",
+              "token_out": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "amount_in": "1000000000000000",
+              "min_received": "2673470",
+              "destination": "0x000000000000000000000000000000000000bEEF",
+              "swap_type": "0x03"
+            },
+            "steps": [
+              {
+                "token_in": "0x4200000000000000000000000000000000000006",
+                "token_out": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                "rate": 1000000,
+                "protocol_id": "13",
+                "pool_address": "0xcDAC0d6c6C59727a65F871236188350531885C43",
+                "swap_type": "0x03"
+              }
+            ]
+          },
+          "stepCount": 1
+        },
+        {
+          "source": "curve-stable-ng",
+          "request": {
+            "chainId": 8453,
+            "source": "curve-stable-ng",
+            "tokenIn": "0x4200000000000000000000000000000000000006",
+            "tokenOut": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "amountIn": "1000000000000000",
+            "inputDecimals": 18,
+            "outputDecimals": 6,
+            "destination": "0x000000000000000000000000000000000000bEEF",
+            "liquiditySources": [
+              "curve-stable-ng"
+            ]
+          },
+          "blockNumber": "52268690",
+          "blockHash": "0xe27eab1cb189002b18ede0fb2a6f8bca006fa072563e606f8392e768a934d07f",
+          "amountOut": "2671653",
+          "pools": [
+            {
+              "kind": "curve-stable-ng",
+              "address": "0x4aC0d61413DdF98c39147Ac28e1D25318a0234f5",
+              "token0": "0x4200000000000000000000000000000000000006",
+              "token1": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+              "factory": "0xd2002373543Ce3527023C75e7518C274A51ce712",
+              "router": "0xd2002373543Ce3527023C75e7518C274A51ce712",
+              "protocolId": "14",
+              "coins": [
+                "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+                "0x4200000000000000000000000000000000000006"
+              ]
+            },
+            {
+              "kind": "curve-stable-ng",
+              "address": "0xb42a745C8B3Af214000c31b8EeFCf4F682c8B31e",
+              "token0": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+              "token1": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "factory": "0xd2002373543Ce3527023C75e7518C274A51ce712",
+              "router": "0xd2002373543Ce3527023C75e7518C274A51ce712",
+              "protocolId": "14",
+              "coins": [
+                "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+                "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+              ]
+            }
+          ],
+          "compiled": {
+            "route": {
+              "token_in": "0x4200000000000000000000000000000000000006",
+              "token_out": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "amount_in": "1000000000000000",
+              "min_received": "2658294",
+              "destination": "0x000000000000000000000000000000000000bEEF",
+              "swap_type": "0x03"
+            },
+            "steps": [
+              {
+                "token_in": "0x4200000000000000000000000000000000000006",
+                "token_out": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+                "rate": 1000000,
+                "protocol_id": "14",
+                "pool_address": "0x4aC0d61413DdF98c39147Ac28e1D25318a0234f5",
+                "swap_type": "0x03"
+              },
+              {
+                "token_in": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+                "token_out": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                "rate": 1000000,
+                "protocol_id": "14",
+                "pool_address": "0xb42a745C8B3Af214000c31b8EeFCf4F682c8B31e",
+                "swap_type": "0x03"
+              }
+            ]
+          },
+          "stepCount": 2
+        }
+      ]
+    }
+  }
+}

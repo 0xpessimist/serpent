@@ -1,0 +1,14 @@
+{
+  "curve_native_in_abi": "191791",
+  "curve_native_in_yul": "191712",
+  "curve_native_out_abi": "190591",
+  "curve_native_out_yul": "190512",
+  "curve_token_abi": "176298",
+  "curve_token_yul": "176219",
+  "solidly_native_in_abi": "108482",
+  "solidly_native_in_yul": "107449",
+  "solidly_native_out_abi": "139047",
+  "solidly_native_out_yul": "138090",
+  "solidly_token_abi": "166401",
+  "solidly_token_yul": "165527"
+}
