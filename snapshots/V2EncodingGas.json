@@ -1,0 +1,8 @@
+{
+  "eth_to_token_abi": "102778",
+  "eth_to_token_yul": "102124",
+  "token_to_eth_abi": "134341",
+  "token_to_eth_yul": "133776",
+  "token_to_token_abi": "161784",
+  "token_to_token_yul": "161212"
+}

@@ -1,0 +1,25 @@
+name: Contracts
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.5.1
+      - run: forge fmt --check
+      - run: forge build --sizes
+      - run: forge test --gas-snapshot-check=true --gas-snapshot-emit=false
+        env:
+          FOUNDRY_PROFILE: ci

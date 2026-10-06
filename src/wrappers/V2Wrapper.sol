@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.23;
+pragma solidity 0.8.37;
 
 import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
+import {BaseWrapper} from "./BaseWrapper.sol";
 
 /*´:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚*\
  * SERPENT                                    *
@@ -20,190 +21,111 @@ import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
 \*°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:.+𓆗*•´.•.:*/
 
 interface ISwapRouterV2 {
+    function WETH() external view returns (address);
     function swapExactETHForTokens(uint256 amountOutMin, address[] calldata path, address to, uint256 deadline)
         external
         payable
         returns (uint256[] memory amounts);
+    function swapExactTokensForETH(
+        uint256 amountIn,
+        uint256 amountOutMin,
+        address[] calldata path,
+        address to,
+        uint256 deadline
+    ) external returns (uint256[] memory amounts);
+    function swapExactTokensForTokens(
+        uint256 amountIn,
+        uint256 amountOutMin,
+        address[] calldata path,
+        address to,
+        uint256 deadline
+    ) external returns (uint256[] memory amounts);
 }
 
-/**
- * @title   Serpent V2Wrapper
- * @dev     Acts as a wrapper for routers of protocols using UniswapV2Router interfaces to be used in Serpent.
- * @author  Eren <https://twitter.com/notereneth>
- */
-contract V2Wrapper {
-    /*´:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:°.°+𓆗*•´.*:*/
-    /*                      STATE VARIABLES                       */
-    /*.:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:°.°+𓆗*•´.*:*/
+/// @notice Delegatecall adapter for the Uniswap V2 Router interface.
+/// @dev Pool addresses are ignored: the protocol router derives pairs from the path.
+/// Serpent enforces aggregate slippage. Router return arrays need not be decoded.
+contract V2Wrapper is BaseWrapper {
+    address public immutable WETH;
 
-    address public immutable PROTOCOL_ROUTER_ADDRESS;
-
-    /*´:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:°.°+𓆗*•´.*:*/
-    /*                       CUSTOM ERRORS                        */
-    /*.:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:°.°+𓆗*•´.*:*/
-
-    error SameToken();
-    error InvalidToken();
-    error InvalidPool();
-    error ExternalCallFailed();
-
-    /*´:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:°.°+𓆗*•´.*:*/
-    /*                     SPECIAL FUNCTIONS                      */
-    /*.:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:°.°+𓆗*•´.*:*/
-
-    constructor(address _protocol_router_address) payable {
-        PROTOCOL_ROUTER_ADDRESS = _protocol_router_address;
+    constructor(address router) payable BaseWrapper(router) {
+        address weth = ISwapRouterV2(router).WETH();
+        if (weth.code.length == 0) revert InvalidWrappedNative();
+        WETH = weth;
     }
 
-    /*´:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:°.°+𓆗*•´.*:*/
-    /*                     EXTERNAL FUNCTIONS                     */
-    /*.:°•𓆗°+.𓆚•´:˚.°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:°.°+𓆗*•´.*:*/
-
-    // @todo NOT WORKING WELL IN YUL RN - NEEDS TO BE FIXED
-
-    function swapEthToToken(address _tokenIn, address _tokenOut, uint256 _amountIn, address _to, address _pair)
+    function swapEthToToken(address tokenIn, address tokenOut, uint256 amountIn, address to, address)
         external
         payable
+        onlyDelegateCall
     {
-        assembly {
-            if iszero(_pair) {
-                mstore(0x00, 0x646f01ed) // InvalidPool()
-                revert(0x1c, 0x04)
-            }
-
-            if or(iszero(_tokenIn), iszero(_tokenOut)) {
-                mstore(0x00, 0x2c2a42d6) // InvalidToken()
-                revert(0x1c, 0x04)
-            }
-
-            if eq(_tokenIn, _tokenOut) {
-                mstore(0x00, 0x5f0c29ff) // SameToken()
-                revert(0x1c, 0x04)
-            }
-        }
-
-        address router = PROTOCOL_ROUTER_ADDRESS;
-
-        SafeTransferLib.safeApproveWithRetry(_tokenIn, router, _amountIn);
-
-        // @todo path encoding and call in assembly needs to be implemented, below functions won't work well.
-
-        address[] memory path = new address[](2);
-        path[0] = _tokenIn;
-        path[1] = _tokenOut;
-
-        ISwapRouterV2(router).swapExactETHForTokens{value: _amountIn}(0, path, _to, block.timestamp);
+        _validateTokens(tokenIn, tokenOut);
+        if (tokenIn != WETH) revert InvalidWrappedNative();
+        _callRouter(tokenIn, tokenOut, amountIn, to, 1);
     }
 
-    function swapTokenToEth(address _tokenIn, address _tokenOut, uint256 _amountIn, address _to, address _pair)
+    function swapTokenToEth(address tokenIn, address tokenOut, uint256 amountIn, address to, address)
         external
         payable
+        onlyDelegateCall
     {
-        assembly {
-            if iszero(_pair) {
-                mstore(0x00, 0x646f01ed) // `InvalidPool()`
-                revert(0x1c, 0x04)
-            }
-
-            if or(iszero(_tokenIn), iszero(_tokenOut)) {
-                mstore(0x00, 0x2c2a42d6) // `InvalidToken()`
-                revert(0x1c, 0x04)
-            }
-
-            if eq(_tokenIn, _tokenOut) {
-                mstore(0x00, 0x5f0c29ff) // `SameToken()`
-                revert(0x1c, 0x04)
-            }
-        }
-
-        address router = PROTOCOL_ROUTER_ADDRESS;
-
-        SafeTransferLib.safeApproveWithRetry(_tokenIn, router, _amountIn);
-
-        address[] memory path = new address[](2);
-        path[0] = _tokenIn;
-        path[1] = _tokenOut;
-
-        assembly {
-            let ptr := mload(0x40) // Free memory pointer
-            mstore(ptr, shl(224, 0x18cbafe5)) // swapExactTokensForETH selector
-            mstore(add(ptr, 4), _amountIn) // amountIn
-            mstore(add(ptr, 36), 0) // amountOutMin
-            mstore(add(ptr, 68), path) // path array pointer
-            mstore(add(ptr, 100), _to) // recipient address
-            mstore(add(ptr, 132), timestamp()) // deadline
-
-            let success :=
-                call(
-                    gas(), // Forward all gas
-                    router, // Router address
-                    0, // No ETH value
-                    ptr, // Input data location
-                    164, // Input data size
-                    0, // No output
-                    0 // No output size
-                )
-
-            if iszero(success) {
-                mstore(0x00, 0x4e487b71) // Error selector for ExternalCallFailed()
-                revert(0x00, 0x04)
-            }
-        }
+        _validateTokens(tokenIn, tokenOut);
+        if (tokenOut != WETH) revert InvalidWrappedNative();
+        SafeTransferLib.safeApproveWithRetry(tokenIn, PROTOCOL_ROUTER_ADDRESS, amountIn);
+        _callRouter(tokenIn, tokenOut, amountIn, to, 2);
     }
 
-    function swapTokenToToken(address _tokenIn, address _tokenOut, uint256 _amountIn, address _to, address _pair)
+    function swapTokenToToken(address tokenIn, address tokenOut, uint256 amountIn, address to, address)
         external
         payable
+        onlyDelegateCall
     {
-        assembly {
-            if iszero(_pair) {
-                mstore(0x00, 0x646f01ed) // `InvalidPool()`
-                revert(0x1c, 0x04)
-            }
+        _validateTokens(tokenIn, tokenOut);
+        SafeTransferLib.safeApproveWithRetry(tokenIn, PROTOCOL_ROUTER_ADDRESS, amountIn);
+        _callRouter(tokenIn, tokenOut, amountIn, to, 3);
+    }
 
-            if or(iszero(_tokenIn), iszero(_tokenOut)) {
-                mstore(0x00, 0x2c2a42d6) // `InvalidToken()`
-                revert(0x1c, 0x04)
-            }
-
-            if eq(_tokenIn, _tokenOut) {
-                mstore(0x00, 0x5f0c29ff) // `SameToken()`
-                revert(0x1c, 0x04)
-            }
-        }
-
+    function _callRouter(address tokenIn, address tokenOut, uint256 amountIn, address to, uint256 kind)
+        internal
+        virtual
+    {
         address router = PROTOCOL_ROUTER_ADDRESS;
-
-        SafeTransferLib.safeApproveWithRetry(_tokenIn, router, _amountIn);
-
-        address[] memory path = new address[](2);
-        path[0] = _tokenIn;
-        path[1] = _tokenOut;
-
-        assembly {
-            let ptr := mload(0x40) // Free memory pointer
-            mstore(ptr, shl(224, 0x38ed1739)) // swapExactTokensForTokens selector
-            mstore(add(ptr, 4), _amountIn) // amountIn
-            mstore(add(ptr, 36), 0) // amountOutMin
-            mstore(add(ptr, 68), path) // path array pointer
-            mstore(add(ptr, 100), _to) // recipient address
-            mstore(add(ptr, 132), timestamp()) // deadline
-
-            let success :=
-                call(
-                    gas(), // Forward all gas
-                    router, // Router address
-                    0, // No ETH value
-                    ptr, // Input data location
-                    164, // Input data size
-                    0, // No output
-                    0 // No output size
-                )
-
-            if iszero(success) {
-                mstore(0x00, 0x4e487b71) // Error selector for ExternalCallFailed()
-                revert(0x1c, 0x04)
+        bool success;
+        assembly ("memory-safe") {
+            let ptr := mload(0x40)
+            switch kind
+            case 1 {
+                // Four-word head, then length and two path elements. Offsets exclude the selector.
+                mstore(ptr, shl(224, 0x7ff36ab5))
+                mstore(add(ptr, 0x04), 0)
+                mstore(add(ptr, 0x24), 0x80)
+                mstore(add(ptr, 0x44), to)
+                mstore(add(ptr, 0x64), timestamp())
+                mstore(add(ptr, 0x84), 2)
+                mstore(add(ptr, 0xa4), tokenIn)
+                mstore(add(ptr, 0xc4), tokenOut)
+                success := call(gas(), router, amountIn, ptr, 0xe4, 0, 0)
+            }
+            default {
+                let selector := 0x38ed1739
+                if eq(kind, 2) { selector := 0x18cbafe5 }
+                // Five-word head, then length and two path elements.
+                mstore(ptr, shl(224, selector))
+                mstore(add(ptr, 0x04), amountIn)
+                mstore(add(ptr, 0x24), 0)
+                mstore(add(ptr, 0x44), 0xa0)
+                mstore(add(ptr, 0x64), to)
+                mstore(add(ptr, 0x84), timestamp())
+                mstore(add(ptr, 0xa4), 2)
+                mstore(add(ptr, 0xc4), tokenIn)
+                mstore(add(ptr, 0xe4), tokenOut)
+                success := call(gas(), router, 0, ptr, 0x104, 0, 0)
+            }
+            if and(iszero(success), iszero(iszero(returndatasize()))) {
+                returndatacopy(ptr, 0, returndatasize())
+                revert(ptr, returndatasize())
             }
         }
+        if (!success) revert ExternalCallFailed();
     }
 }

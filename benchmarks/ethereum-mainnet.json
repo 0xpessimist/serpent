@@ -1,0 +1,96 @@
+{
+  "chain_id": 1,
+  "block_number": 26128515,
+  "block_hash": "0xeea9221ae0da2b177a111a324b2d8b17963b682e04d7c8f9a4f8b5535ed66c84",
+  "block_time_utc": "2026-10-05T20:19:35+00:00",
+  "compiler": "0.8.37+commit.f401782d",
+  "evm_version": "cancun",
+  "via_ir": true,
+  "optimizer_runs": 1000000,
+  "foundry": "forge Version: 1.5.1-stable",
+  "test_count": 16,
+  "tests_passed": [
+    "test_canonicalPermit2SignatureAndTransfer()",
+    "test_deploymentRelationships()",
+    "test_existingBalancesPreservedOnNativeInput()",
+    "test_existingBalancesPreservedOnNativeOutput()",
+    "test_mixedNativeInputSplit()",
+    "test_mixedTwoHop()",
+    "test_nativeIntermediateIsDistinctFromWETH()",
+    "test_nativeSlippageAndRollback()",
+    "test_tokenSlippageAndRollback()",
+    "test_usdcNativePermit()",
+    "test_v2EthToToken()",
+    "test_v2TokenToEth()",
+    "test_v2TokenToToken()",
+    "test_v3EthToToken()",
+    "test_v3TokenToEth()",
+    "test_v3TokenToToken()"
+  ],
+  "runtime_bytes": {
+    "Serpent": 7190,
+    "V2Wrapper": 1892,
+    "V3Wrapper": 2227,
+    "WrapperFactory": 5681
+  },
+  "addresses": {
+    "WETH": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "USDC": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "DAI": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+    "V2Router": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+    "V3SwapRouter": "0xE592427A0AEce92De3Edee1F18E0157C05861564",
+    "V3Factory": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+    "Permit2": "0x000000000022D473030F116dDEE9F6B43aC78BA3"
+  },
+  "v3_pools": {
+    "WETH_USDC_500": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+    "USDC_DAI_100": "0x5777d92f208679db4b9778590fa3cab3ac9e2168"
+  },
+  "measurement": "snapshotGasLastCall, isolated Cancun calls, deployed canonical V2/original V3 routers",
+  "funding": "20 ETH local user balance; 2 ETH deposited into real WETH; 1 ETH V2 swap buys USDC",
+  "allowances": "User approvals precede measurement; Serpent starts without protocol-router approvals",
+  "amounts": {
+    "native_or_weth_input_wei": 10000000000000000,
+    "usdc_input_units": 10000000
+  },
+  "comparison": "Identical state restored between direct protocol calls and Serpent; exact output parity",
+  "v3_native_output_reference": "SwapRouter multicall(exactInputSingle, unwrapWETH9)",
+  "limitations": [
+    "Cancun execution accounting with pinned mainnet state; not a current mainnet transaction fee estimate",
+    "Only selected WETH/USDC/DAI routes and pools; no broadcast or production audit",
+    "Direct mixed-route references validate output only; no atomic direct-route gas comparison"
+  ],
+  "gas": {
+    "dust_v3_eth_to_usdc_direct": 137019,
+    "dust_v3_eth_to_usdc_serpent": 170547,
+    "dust_v3_usdc_to_eth_direct": 171802,
+    "dust_v3_usdc_to_eth_serpent": 200738,
+    "mixed_native_split_serpent": 249539,
+    "mixed_usdc_eth_dai_with_weth_dust_serpent": 296609,
+    "mixed_weth_usdc_dai_serpent": 283966,
+    "usdc_eip2612_to_eth": 255089,
+    "v2_eth_to_usdc_direct": 119789,
+    "v2_eth_to_usdc_serpent": 156279,
+    "v2_usdc_to_eth_direct": 146659,
+    "v2_usdc_to_eth_serpent": 200657,
+    "v2_weth_to_usdc_direct": 116420,
+    "v2_weth_to_usdc_serpent": 174712,
+    "v3_eth_to_usdc_direct": 137019,
+    "v3_eth_to_usdc_serpent": 170547,
+    "v3_usdc_to_eth_direct": 171802,
+    "v3_usdc_to_eth_serpent": 208351,
+    "v3_weth_to_usdc_direct": 133523,
+    "v3_weth_to_usdc_serpent": 186762,
+    "weth_permit2_to_usdc": 221548
+  },
+  "aggregation_overhead": {
+    "v2_eth_to_usdc": 36490,
+    "v2_usdc_to_eth": 53998,
+    "v2_weth_to_usdc": 58292,
+    "v3_eth_to_usdc": 33528,
+    "v3_usdc_to_eth": 36549,
+    "v3_weth_to_usdc": 53239,
+    "dust_v3_eth_to_usdc": 33528,
+    "dust_v3_usdc_to_eth": 28936
+  }
+}

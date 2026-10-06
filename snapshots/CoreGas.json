@@ -1,0 +1,18 @@
+{
+  "mixed_split_solidity": "217458",
+  "mixed_split_yul": "214671",
+  "mixed_two_hop_solidity": "256934",
+  "mixed_two_hop_yul": "254046",
+  "v2_eth_to_token_solidity": "104005",
+  "v2_eth_to_token_yul": "102124",
+  "v2_token_to_eth_solidity": "135330",
+  "v2_token_to_eth_yul": "133776",
+  "v2_token_to_token_solidity": "162852",
+  "v2_token_to_token_yul": "161212",
+  "v3_eth_to_token_solidity": "106337",
+  "v3_eth_to_token_yul": "104456",
+  "v3_token_to_eth_solidity": "178829",
+  "v3_token_to_eth_yul": "177275",
+  "v3_token_to_token_solidity": "164623",
+  "v3_token_to_token_yul": "162982"
+}

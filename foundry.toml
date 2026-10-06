@@ -2,5 +2,19 @@
 src = "src"
 out = "out"
 libs = ["lib"]
+solc_version = "0.8.37"
+evm_version = "cancun"
+optimizer = true
+optimizer_runs = 1000000
+via_ir = true
+isolate = true
+gas_reports = ["Serpent", "V2Wrapper", "V3Wrapper", "V3Wrapper02", "SlipstreamWrapper"]
+ignored_warnings_from = ["lib"]
+fs_permissions = [{ access = "read", path = "./test/fixtures" }]
 
-# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+[fuzz]
+runs = 256
+seed = "0x73657270656e74"
+
+[profile.ci.fuzz]
+runs = 2048

@@ -17,13 +17,14 @@ import {BaseWrapper} from "./BaseWrapper.sol";
  *  \__/      \         /       \        /    *
  *   |         ~~~~~~~~~         ~~~~~~~~     *
  *   ^                                        *
- *                                 V3 WRAPPER *
+ *                         SLIPSTREAM WRAPPER *
 \*°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:.+𓆗*•´.•.:*/
 
-/// @notice Delegatecall adapter for the original Uniswap V3 SwapRouter interface.
-/// @dev Uses the eight-field, deadline-bearing exactInputSingle tuple (0x414bf389).
-/// SwapRouter02 has a different ABI and needs a separate adapter.
-contract V3Wrapper is BaseWrapper {
+/// @notice Delegatecall adapter for the Aerodrome/Velodrome Slipstream SwapRouter ABI.
+/// @dev Eight-field tuple (0xa026383e) uses signed tick spacing rather than a fixed V3 fee.
+/// Each deployment uses its own immutable router; the Serpent route ABI remains unchanged.
+/// @author 0xpessimist (https://github.com/0xpessimist)
+contract SlipstreamWrapper is BaseWrapper {
     address public immutable WETH;
 
     constructor(address router, address weth) payable BaseWrapper(router) {
@@ -52,7 +53,6 @@ contract V3Wrapper is BaseWrapper {
         if (tokenOut != WETH) revert InvalidWrappedNative();
         SafeTransferLib.safeApproveWithRetry(tokenIn, PROTOCOL_ROUTER_ADDRESS, amountIn);
         amountOut = _exactInputSingle(tokenIn, tokenOut, amountIn, address(this), pair, 0);
-
         address weth = WETH;
         bool success;
         assembly ("memory-safe") {
@@ -66,7 +66,6 @@ contract V3Wrapper is BaseWrapper {
             }
         }
         if (!success) revert ExternalCallFailed();
-        // Serpent is already the recipient in the delegated path; avoid an ETH self-call.
         if (to != address(this)) SafeTransferLib.safeTransferETH(to, amountOut);
     }
 
@@ -81,15 +80,16 @@ contract V3Wrapper is BaseWrapper {
         amountOut = _exactInputSingle(tokenIn, tokenOut, amountIn, to, pair, 0);
     }
 
-    function _fee(address pair) private view returns (uint256 fee) {
+    function _tickSpacing(address pair) private view returns (uint256 spacing) {
         bool success;
         assembly ("memory-safe") {
-            mstore(0x00, shl(224, 0xddca3f43))
+            mstore(0x00, shl(224, 0xd0c93a7c))
             success := staticcall(gas(), pair, 0x00, 0x04, 0x00, 0x20)
             success := and(success, eq(returndatasize(), 0x20))
-            fee := mload(0x00)
+            spacing := mload(0x00)
         }
-        if (!success || fee > type(uint24).max) revert InvalidPool();
+        // Positive int24 is required; negative ABI words and noncanonical high bits fail this bound.
+        if (!success || spacing == 0 || spacing > uint256(uint24(type(int24).max))) revert InvalidPool();
     }
 
     function _exactInputSingle(
@@ -100,15 +100,15 @@ contract V3Wrapper is BaseWrapper {
         address pair,
         uint256 value
     ) private returns (uint256 amountOut) {
-        uint256 fee = _fee(pair);
+        uint256 spacing = _tickSpacing(pair);
         address router = PROTOCOL_ROUTER_ADDRESS;
         bool success;
         assembly ("memory-safe") {
             let ptr := mload(0x40)
-            mstore(ptr, shl(224, 0x414bf389))
+            mstore(ptr, shl(224, 0xa026383e))
             mstore(add(ptr, 0x04), tokenIn)
             mstore(add(ptr, 0x24), tokenOut)
-            mstore(add(ptr, 0x44), fee)
+            mstore(add(ptr, 0x44), spacing)
             mstore(add(ptr, 0x64), to)
             mstore(add(ptr, 0x84), timestamp())
             mstore(add(ptr, 0xa4), amountIn)

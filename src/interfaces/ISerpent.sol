@@ -1,20 +1,30 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.23;
-/*
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.37;
+
+import {Serpent} from "../Serpent.sol";
+
+/// @dev Uses the router's structs so existing Serpent.RouteParam callers retain source compatibility.
 interface ISerpent {
-    function fee_handler() external view returns (address);
-    function getDirectFee() external view returns (uint256);
-    function getRouterFee() external view returns (uint256);
-    function getSwapHandler(uint256 protocol_id) external view returns (address);
-    function removeSwapHandler(uint256 protocol_id) external;
-    function setDirectSwapFee(uint256 new_fee) external;
-    function setFeeHandler(address new_fee_handler) external;
-    function setRouterFee(uint256 new_fee) external;
-    function setSwapHandler(uint256 protocol_id, address handler) external;
-    function sweepStuckTokensOrEth(address token, uint256 amount, address receiver) external;
-    function sweepMultipleStuckTokensOrEth(address[] memory tokens, uint256[] memory amounts, address receiver)
-        external;
-    function swappers(uint256) external view returns (address);
-    function swap(RouteParam memory route, SwapParams[] memory swap_parameters) external payable returns (uint256);
+    event Swap(
+        address sender, uint256 amount_in, uint256 amount_out, address token_in, address token_out, address destination
+    );
+
+    function swappers(uint256 protocol_id) external view returns (address);
+    function swap(Serpent.RouteParam calldata route, Serpent.SwapParams[] calldata swap_parameters)
+        external
+        payable
+        returns (uint256);
+    function swapWithPermit(
+        Serpent.RouteParam calldata route,
+        Serpent.SwapParams[] calldata swap_parameters,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) external payable returns (uint256);
+    function addSwapper(uint256 protocol_id, address swapper) external payable;
+    function removeSwapper(uint256 protocol_id) external payable;
+    function sweepStuckToken(address token, uint256 amount, address receiver) external payable;
+    function sweepStuckTokens(address[] calldata tokens, uint256[] calldata amounts, address receiver) external payable;
+    function sweepStuckEther(address receiver) external payable;
 }
-*/

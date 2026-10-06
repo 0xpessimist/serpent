@@ -1,0 +1,10 @@
+{
+  "mixed_split": "214671",
+  "mixed_two_hop": "254046",
+  "v2_eth_to_token": "102124",
+  "v2_token_to_eth": "133776",
+  "v2_token_to_token": "161212",
+  "v3_eth_to_token": "104456",
+  "v3_token_to_eth": "177275",
+  "v3_token_to_token": "162982"
+}

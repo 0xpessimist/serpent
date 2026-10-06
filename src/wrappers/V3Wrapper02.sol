@@ -17,13 +17,13 @@ import {BaseWrapper} from "./BaseWrapper.sol";
  *  \__/      \         /       \        /    *
  *   |         ~~~~~~~~~         ~~~~~~~~     *
  *   ^                                        *
- *                                 V3 WRAPPER *
+ *                              V3 WRAPPER 02 *
 \*°*𓆓˚•´°•.𓆓•.*•𓆗⟡.𓆗*:˚.°*.𓆚•´.°:.+𓆗*•´.•.:*/
 
-/// @notice Delegatecall adapter for the original Uniswap V3 SwapRouter interface.
-/// @dev Uses the eight-field, deadline-bearing exactInputSingle tuple (0x414bf389).
-/// SwapRouter02 has a different ABI and needs a separate adapter.
-contract V3Wrapper is BaseWrapper {
+/// @notice Delegatecall adapter for Uniswap V3 SwapRouter02, including canonical Base.
+/// @dev Seven-field exactInputSingle tuple (0x04e45aaf); separate adapter avoids a per-hop ABI branch.
+/// @author 0xpessimist (https://github.com/0xpessimist)
+contract V3Wrapper02 is BaseWrapper {
     address public immutable WETH;
 
     constructor(address router, address weth) payable BaseWrapper(router) {
@@ -52,7 +52,6 @@ contract V3Wrapper is BaseWrapper {
         if (tokenOut != WETH) revert InvalidWrappedNative();
         SafeTransferLib.safeApproveWithRetry(tokenIn, PROTOCOL_ROUTER_ADDRESS, amountIn);
         amountOut = _exactInputSingle(tokenIn, tokenOut, amountIn, address(this), pair, 0);
-
         address weth = WETH;
         bool success;
         assembly ("memory-safe") {
@@ -66,7 +65,6 @@ contract V3Wrapper is BaseWrapper {
             }
         }
         if (!success) revert ExternalCallFailed();
-        // Serpent is already the recipient in the delegated path; avoid an ETH self-call.
         if (to != address(this)) SafeTransferLib.safeTransferETH(to, amountOut);
     }
 
@@ -105,16 +103,15 @@ contract V3Wrapper is BaseWrapper {
         bool success;
         assembly ("memory-safe") {
             let ptr := mload(0x40)
-            mstore(ptr, shl(224, 0x414bf389))
+            mstore(ptr, shl(224, 0x04e45aaf))
             mstore(add(ptr, 0x04), tokenIn)
             mstore(add(ptr, 0x24), tokenOut)
             mstore(add(ptr, 0x44), fee)
             mstore(add(ptr, 0x64), to)
-            mstore(add(ptr, 0x84), timestamp())
-            mstore(add(ptr, 0xa4), amountIn)
+            mstore(add(ptr, 0x84), amountIn)
+            mstore(add(ptr, 0xa4), 0)
             mstore(add(ptr, 0xc4), 0)
-            mstore(add(ptr, 0xe4), 0)
-            success := call(gas(), router, value, ptr, 0x104, ptr, 0x20)
+            success := call(gas(), router, value, ptr, 0xe4, ptr, 0x20)
             if and(iszero(success), iszero(iszero(returndatasize()))) {
                 returndatacopy(ptr, 0, returndatasize())
                 revert(ptr, returndatasize())
