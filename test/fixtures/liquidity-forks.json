@@ -108,9 +108,10 @@
       "deploymentCount": 2
     },
     "8453": {
-      "blockNumber": "52267758",
-      "blockHash": "0x3b6c71d35238c51e084b9a6840d9de420cb367238c33c92f155d5d4ed38b1c2a",
+      "blockNumber": "52300503",
+      "blockHash": "0xf4df30ff05dbc7c6ed7bee0b7c03f685e62b41b43d8a133d30be8a14e500e6c9",
       "wrappedNative": "0x4200000000000000000000000000000000000006",
+      "deploymentCount": 11,
       "deployments": [
         {
           "name": "sushiswap",
@@ -125,7 +126,7 @@
           "outputDecimals": 6,
           "fee": 0,
           "amountIn": "1000000000000000",
-          "amountOut": "2679894"
+          "amountOut": "2555609"
         },
         {
           "name": "sushiswap",
@@ -140,7 +141,7 @@
           "outputDecimals": 6,
           "fee": 500,
           "amountIn": "1000000000000000",
-          "amountOut": "2696925"
+          "amountOut": "2568793"
         },
         {
           "name": "pancakeswap",
@@ -155,7 +156,7 @@
           "outputDecimals": 6,
           "fee": 0,
           "amountIn": "1000000000000000",
-          "amountOut": "2670594"
+          "amountOut": "2549509"
         },
         {
           "name": "pancakeswap",
@@ -170,7 +171,7 @@
           "outputDecimals": 6,
           "fee": 500,
           "amountIn": "1000000000000000",
-          "amountOut": "2697009"
+          "amountOut": "2568565"
         },
         {
           "name": "baseswap",
@@ -185,7 +186,7 @@
           "outputDecimals": 6,
           "fee": 0,
           "amountIn": "1000000000000000",
-          "amountOut": "2685344"
+          "amountOut": "2563871"
         },
         {
           "name": "swapbased",
@@ -200,7 +201,7 @@
           "outputDecimals": 6,
           "fee": 0,
           "amountIn": "1000000000000000",
-          "amountOut": "2678190"
+          "amountOut": "2553992"
         },
         {
           "name": "alienbase",
@@ -215,10 +216,69 @@
           "outputDecimals": 6,
           "fee": 0,
           "amountIn": "1000000000000000",
-          "amountOut": "2676494"
+          "amountOut": "2550549"
+        },
+        {
+          "name": "rocketswap",
+          "kind": "v2",
+          "protocolId": "15",
+          "factory": "0x1B8128c3A1B7D20053D10763ff02466ca7FF99FC",
+          "router": "0x4cf76043B3f97ba06917cBd90F9e3A2AAC1B306e",
+          "routerAbi": "v2",
+          "quoter": "0x0000000000000000000000000000000000000000",
+          "pool": "0x6902b348D1FD08a440D4e7A6B88DdD3ec36d6b6B",
+          "tokenOut": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+          "outputDecimals": 6,
+          "fee": 0,
+          "amountIn": "1000000000000000",
+          "amountOut": "768564"
+        },
+        {
+          "name": "dackieswap",
+          "kind": "v2",
+          "protocolId": "16",
+          "factory": "0x591f122D1df761E616c13d265006fcbf4c6d6551",
+          "router": "0xCa4EAa32E7081b0c4Ba47e2bDF9B7163907Fe56f",
+          "routerAbi": "v2",
+          "quoter": "0x0000000000000000000000000000000000000000",
+          "pool": "0x6bee1580471F38000951abd788A9C060A4ad3Ac3",
+          "tokenOut": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "outputDecimals": 6,
+          "fee": 0,
+          "amountIn": "1000000000000000",
+          "amountOut": "2168937"
+        },
+        {
+          "name": "baseswap",
+          "kind": "v3",
+          "protocolId": "17",
+          "factory": "0x38015D05f4fEC8AFe15D7cc0386a126574e8077B",
+          "router": "0x1B8eea9315bE495187D873DA7773a874545D9D48",
+          "routerAbi": "original",
+          "quoter": "0x4fDBD73aD4B1DDde594BF05497C15f76308eFfb9",
+          "pool": "0x74cb6260Be6F31965C239Df6d6Ef2Ac2B5D4f020",
+          "tokenOut": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "outputDecimals": 6,
+          "fee": 80,
+          "amountIn": "1000000000000000",
+          "amountOut": "2569826"
+        },
+        {
+          "name": "alienbase",
+          "kind": "v3",
+          "protocolId": "18",
+          "factory": "0x0Fd83557b2be93617c9C1C1B6fd549401C74558C",
+          "router": "0xB20C411FC84FBB27e78608C24d0056D974ea9411",
+          "routerAbi": "router02",
+          "quoter": "0x353B1BEA22dd3B41c0Fc529Cf72D829F9493b23A",
+          "pool": "0x331C12605938d2a9aB893c495CfD5f4e875E3313",
+          "tokenOut": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "outputDecimals": 6,
+          "fee": 200,
+          "amountIn": "1000000000000000",
+          "amountOut": "2560127"
         }
-      ],
-      "deploymentCount": 7
+      ]
     }
   }
 }

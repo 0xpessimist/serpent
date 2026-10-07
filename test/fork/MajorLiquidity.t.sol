@@ -4,11 +4,12 @@ pragma solidity 0.8.37;
 import {Test} from "forge-std/Test.sol";
 import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
 import {Serpent} from "../../src/Serpent.sol";
+import {V2Wrapper} from "../../src/wrappers/V2Wrapper.sol";
 import {V3Wrapper} from "../../src/wrappers/V3Wrapper.sol";
 import {V3Wrapper02} from "../../src/wrappers/V3Wrapper02.sol";
 import {SolidlyWrapper} from "../../src/wrappers/SolidlyWrapper.sol";
 import {CurveStableNGWrapper} from "../../src/wrappers/CurveStableNGWrapper.sol";
-import {ILiquidityToken, ILiquidityQuoter, ILiquidityFactory} from "./LiquidityForks.t.sol";
+import {ILiquidityToken, ILiquidityQuoter, ILiquidityFactory, ILiquidityRouter} from "./LiquidityForks.t.sol";
 
 interface IStableForkPool {
     function get_dy(int128, int128, uint256) external view returns (uint256);
@@ -41,7 +42,7 @@ abstract contract MajorLiquidityForkBase is Test {
     Serpent.SwapParams[] internal steps;
     address[] internal targets;
     address[] internal quoters;
-    uint256[] internal families; // 1 = Curve NG, 2 = Solidly, 3 = original V3.
+    uint256[] internal families; // 1 = Curve NG, 2 = Solidly, 3 = original V3, 4 = V2, 5 = Router02.
     uint256 internal count;
 
     function _chain() internal pure virtual returns (uint256);
@@ -105,19 +106,30 @@ abstract contract MajorLiquidityForkBase is Test {
             );
             string memory pool = string.concat(prefix, ".pools[", vm.toString(i), "]");
             address target = vm.parseJsonAddress(json, string.concat(pool, ".router"));
-            uint256 family = keccak256(bytes(vm.parseJsonString(json, string.concat(pool, ".kind"))))
-                == keccak256("curve-stable-ng")
+            bytes32 kind = keccak256(bytes(vm.parseJsonString(json, string.concat(pool, ".kind"))));
+            uint256 family = kind == keccak256("curve-stable-ng")
                 ? 1
-                : keccak256(bytes(vm.parseJsonString(json, string.concat(pool, ".kind")))) == keccak256("solidly")
-                    ? 2
-                    : 3;
+                : kind == keccak256("solidly") ? 2 : kind == keccak256("v2") ? 4 : 3;
+            string memory abiKey = string.concat(pool, ".routerAbi");
+            if (
+                family == 3 && vm.keyExistsJson(json, abiKey)
+                    && keccak256(bytes(vm.parseJsonString(json, abiKey))) == keccak256("router02")
+            ) family = 5;
             targets.push(target);
-            quoters.push(family == 3 ? vm.parseJsonAddress(json, string.concat(pool, ".quoter")) : address(0));
+            quoters.push(
+                family == 3 || family == 5 ? vm.parseJsonAddress(json, string.concat(pool, ".quoter")) : address(0)
+            );
             families.push(family);
             if (serpent.swappers(steps[i].protocol_id) == address(0)) {
                 address adapter = family == 1
                     ? address(new CurveStableNGWrapper(target, wrapped))
-                    : family == 2 ? address(new SolidlyWrapper(target)) : address(new V3Wrapper(target, wrapped));
+                    : family == 2
+                        ? address(new SolidlyWrapper(target))
+                        : family == 4
+                            ? address(new V2Wrapper(target))
+                            : family == 5
+                                ? address(new V3Wrapper02(target, wrapped))
+                                : address(new V3Wrapper(target, wrapped));
                 serpent.addSwapper(steps[i].protocol_id, adapter);
             }
         }
@@ -190,6 +202,11 @@ abstract contract MajorLiquidityForkBase is Test {
             _load(i);
             if (route.token_in != wrapped) continue;
             _execute(true);
+            bool sequential = true;
+            for (uint256 j; j < steps.length; ++j) {
+                if (steps[j].rate != 1_000_000) sequential = false;
+            }
+            if (!sequential) continue;
             // Reverse the authenticated path and quote each hop against the state after acquisition.
             Serpent.SwapParams[] memory reverse = new Serpent.SwapParams[](steps.length);
             uint256 amount = route.min_received;
@@ -232,7 +249,9 @@ abstract contract MajorLiquidityForkBase is Test {
         }
         if (nativeIn) {
             trade.swap_type = 0x01;
-            graph[0].swap_type = 0x01;
+            for (uint256 i; i < graph.length; ++i) {
+                if (graph[i].token_in == trade.token_in) graph[i].swap_type = 0x01;
+            }
         }
         vm.prank(user);
         assertEq(serpent.swap{value: nativeIn ? trade.amount_in : 0}(trade, graph), trade.min_received);
@@ -279,6 +298,12 @@ abstract contract MajorLiquidityForkBase is Test {
                 0x420DD381b31aEf6683db6B902084cB0FFECe40Da
             );
             return ISolidlyForkRouter(targets[index]).getAmountsOut(amount, path)[1];
+        }
+        if (families[index] == 4) {
+            address[] memory path = new address[](2);
+            path[0] = input;
+            path[1] = output;
+            return ILiquidityRouter(targets[index]).getAmountsOut(amount, path)[1];
         }
         (uint256 out,,,) = ILiquidityQuoter(quoters[index])
             .quoteExactInputSingle(

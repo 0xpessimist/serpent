@@ -60,16 +60,26 @@ abstract contract LiquidityForkBase is Test {
 
     function _chain() internal pure virtual returns (uint256);
 
+    function _fixture() internal pure virtual returns (string memory) {
+        return "test/fixtures/liquidity-forks.json";
+    }
+
+    function _deploymentCount() internal pure virtual returns (uint256) {
+        return _chain() == 1 ? 4 : _chain() == 8453 ? 11 : 2;
+    }
+
     function setUp() public {
         vm.skip(!vm.envOr("RUN_LIQUIDITY_FORK", false), "Liquidity forks are opt-in");
-        string memory json = vm.readFile("test/fixtures/liquidity-forks.json");
+        string memory json = vm.readFile(_fixture());
         assertEq(vm.parseJsonUint(json, ".schemaVersion"), 1);
         string memory root = string.concat(".chains.", vm.toString(_chain()));
         string memory rpc = _chain() == 1
             ? vm.envOr("MAINNET_RPC_URL", string("https://eth.drpc.org"))
             : _chain() == 8453
                 ? vm.envOr("BASE_RPC_URL", string("https://mainnet.base.org"))
-                : vm.envOr("POLYGON_RPC_URL", string("https://polygon.drpc.org"));
+                : _chain() == 999
+                    ? vm.envOr("HYPEREVM_RPC_URL", string("https://hyperliquid.drpc.org"))
+                    : vm.envOr("POLYGON_RPC_URL", string("https://polygon.drpc.org"));
         uint256 forkBlock = _integer(json, string.concat(root, ".blockNumber"));
         vm.createSelectFork(rpc, forkBlock);
         assertEq(block.chainid, _chain());
@@ -81,7 +91,7 @@ abstract contract LiquidityForkBase is Test {
         assertEq(recipient.code.length, 0);
         serpent = new Serpent(address(this));
         uint256 count = vm.parseJsonUint(json, string.concat(root, ".deploymentCount"));
-        assertEq(count, _chain() == 1 ? 4 : _chain() == 8453 ? 7 : 2);
+        assertEq(count, _deploymentCount());
         for (uint256 i; i < count; ++i) {
             string memory prefix = string.concat(root, ".deployments[", vm.toString(i), "]");
             Deployment memory d;

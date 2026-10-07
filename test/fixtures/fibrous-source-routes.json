@@ -1,0 +1,390 @@
+{
+  "schemaVersion": 1,
+  "chains": {
+    "999": {
+      "wrappedNative": "0x5555555555555555555555555555555555555555",
+      "routes": [
+        {
+          "source": "hybra-v3",
+          "stepCount": 3,
+          "request": {
+            "chainId": 999,
+            "tokenIn": "0x5555555555555555555555555555555555555555",
+            "tokenOut": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
+            "amountIn": "1000000000000000",
+            "inputDecimals": 18,
+            "outputDecimals": 6,
+            "destination": "0x000000000000000000000000000000000000bEEF",
+            "slippagePpm": "0",
+            "liquiditySources": [
+              "hybra-v3"
+            ]
+          },
+          "blockNumber": "47919006",
+          "blockHash": "0x2fa0f6a5ca96dda966d7407f18fa51b43ec7a48e21bb68c5fcda513179cec4fe",
+          "amountOut": "88468",
+          "pools": [
+            {
+              "kind": "v3",
+              "address": "0xB874Fd2E328b7b6F6B982fA71e30e02C64de651F",
+              "token0": "0x5555555555555555555555555555555555555555",
+              "token1": "0xE2d2959f89B6389DeB624bF076Fe7D9E5401f377",
+              "protocolId": "7",
+              "router": "0x7DB3D09fF3B398A771d0e2cdE8ac612941C9E801",
+              "quoter": "0x9AAa88ddd409C015F3ab3F557D3B138ec3cd66C0",
+              "fee": 2500,
+              "routerAbi": "original"
+            },
+            {
+              "kind": "v3",
+              "address": "0xcC3F48fB9Cb724759a07d6D12Aa85f75EC045a16",
+              "token0": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+              "token1": "0xE2d2959f89B6389DeB624bF076Fe7D9E5401f377",
+              "protocolId": "7",
+              "router": "0x7DB3D09fF3B398A771d0e2cdE8ac612941C9E801",
+              "quoter": "0x9AAa88ddd409C015F3ab3F557D3B138ec3cd66C0",
+              "fee": 25,
+              "routerAbi": "original"
+            },
+            {
+              "kind": "v3",
+              "address": "0x494385b47D58EF303413e1141Acdf7700BC150eF",
+              "token0": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+              "token1": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
+              "protocolId": "7",
+              "router": "0x7DB3D09fF3B398A771d0e2cdE8ac612941C9E801",
+              "quoter": "0x9AAa88ddd409C015F3ab3F557D3B138ec3cd66C0",
+              "fee": 25,
+              "routerAbi": "original"
+            }
+          ],
+          "compiled": {
+            "route": {
+              "token_in": "0x5555555555555555555555555555555555555555",
+              "token_out": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
+              "amount_in": "1000000000000000",
+              "min_received": "88468",
+              "destination": "0x000000000000000000000000000000000000bEEF",
+              "swap_type": "0x03"
+            },
+            "steps": [
+              {
+                "token_in": "0x5555555555555555555555555555555555555555",
+                "token_out": "0xE2d2959f89B6389DeB624bF076Fe7D9E5401f377",
+                "rate": 1000000,
+                "protocol_id": "7",
+                "pool_address": "0xB874Fd2E328b7b6F6B982fA71e30e02C64de651F",
+                "swap_type": "0x03"
+              },
+              {
+                "token_in": "0xE2d2959f89B6389DeB624bF076Fe7D9E5401f377",
+                "token_out": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+                "rate": 1000000,
+                "protocol_id": "7",
+                "pool_address": "0xcC3F48fB9Cb724759a07d6D12Aa85f75EC045a16",
+                "swap_type": "0x03"
+              },
+              {
+                "token_in": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+                "token_out": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
+                "rate": 1000000,
+                "protocol_id": "7",
+                "pool_address": "0x494385b47D58EF303413e1141Acdf7700BC150eF",
+                "swap_type": "0x03"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "8453": {
+      "wrappedNative": "0x4200000000000000000000000000000000000006",
+      "routes": [
+        {
+          "source": "rocketswap-v2",
+          "stepCount": 1,
+          "request": {
+            "chainId": 8453,
+            "tokenIn": "0x4200000000000000000000000000000000000006",
+            "tokenOut": "0x6653dD4B92a0e5Bf8ae570A98906d9D6fD2eEc09",
+            "amountIn": "1000000000000000",
+            "inputDecimals": 18,
+            "outputDecimals": 18,
+            "destination": "0x000000000000000000000000000000000000bEEF",
+            "slippagePpm": "0",
+            "liquiditySources": [
+              "rocketswap-v2"
+            ]
+          },
+          "blockNumber": "52300351",
+          "blockHash": "0x6cd173b9d7701d38382339ca1af5af3bd78bdce15bc31068c4fbdbaff4a8ae71",
+          "amountOut": "627466431713650068684",
+          "pools": [
+            {
+              "kind": "v2",
+              "address": "0x0054C66Cb7B352dC79FD5F6A024D6F8A215Ff2ce",
+              "token0": "0x4200000000000000000000000000000000000006",
+              "token1": "0x6653dD4B92a0e5Bf8ae570A98906d9D6fD2eEc09",
+              "protocolId": "15",
+              "router": "0x4cf76043B3f97ba06917cBd90F9e3A2AAC1B306e",
+              "reserve0": "319139244184724295",
+              "reserve1": "201479184353860291628289"
+            }
+          ],
+          "compiled": {
+            "route": {
+              "token_in": "0x4200000000000000000000000000000000000006",
+              "token_out": "0x6653dD4B92a0e5Bf8ae570A98906d9D6fD2eEc09",
+              "amount_in": "1000000000000000",
+              "min_received": "627466431713650068684",
+              "destination": "0x000000000000000000000000000000000000bEEF",
+              "swap_type": "0x03"
+            },
+            "steps": [
+              {
+                "token_in": "0x4200000000000000000000000000000000000006",
+                "token_out": "0x6653dD4B92a0e5Bf8ae570A98906d9D6fD2eEc09",
+                "rate": 1000000,
+                "protocol_id": "15",
+                "pool_address": "0x0054C66Cb7B352dC79FD5F6A024D6F8A215Ff2ce",
+                "swap_type": "0x03"
+              }
+            ]
+          }
+        },
+        {
+          "source": "dackieswap-v2",
+          "stepCount": 3,
+          "request": {
+            "chainId": 8453,
+            "tokenIn": "0x4200000000000000000000000000000000000006",
+            "tokenOut": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "amountIn": "1000000000000000",
+            "inputDecimals": 18,
+            "outputDecimals": 6,
+            "destination": "0x000000000000000000000000000000000000bEEF",
+            "slippagePpm": "0",
+            "liquiditySources": [
+              "dackieswap-v2"
+            ]
+          },
+          "blockNumber": "52300351",
+          "blockHash": "0x6cd173b9d7701d38382339ca1af5af3bd78bdce15bc31068c4fbdbaff4a8ae71",
+          "amountOut": "2343844",
+          "pools": [
+            {
+              "kind": "v2",
+              "address": "0x6bee1580471F38000951abd788A9C060A4ad3Ac3",
+              "token0": "0x4200000000000000000000000000000000000006",
+              "token1": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "protocolId": "16",
+              "router": "0xCa4EAa32E7081b0c4Ba47e2bDF9B7163907Fe56f",
+              "reserve0": "5476414086777200",
+              "reserve1": "14076707"
+            },
+            {
+              "kind": "v2",
+              "address": "0x7dB1c9f51F2CB456f0c5d7E2F939Fa7f6B360142",
+              "token0": "0x4200000000000000000000000000000000000006",
+              "token1": "0xc2BC7A73613B9bD5F373FE10B55C59a69F4D617B",
+              "protocolId": "16",
+              "router": "0xCa4EAa32E7081b0c4Ba47e2bDF9B7163907Fe56f",
+              "reserve0": "621605449419960264",
+              "reserve1": "22892282500361070259721251"
+            },
+            {
+              "kind": "v2",
+              "address": "0xF3f75aDbd75CAf5230bf93f3A337Db848d03E0D3",
+              "token0": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "token1": "0xc2BC7A73613B9bD5F373FE10B55C59a69F4D617B",
+              "protocolId": "16",
+              "router": "0xCa4EAa32E7081b0c4Ba47e2bDF9B7163907Fe56f",
+              "reserve0": "10686012",
+              "reserve1": "149315759368120385318710"
+            }
+          ],
+          "compiled": {
+            "route": {
+              "token_in": "0x4200000000000000000000000000000000000006",
+              "token_out": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "amount_in": "1000000000000000",
+              "min_received": "2343844",
+              "destination": "0x000000000000000000000000000000000000bEEF",
+              "swap_type": "0x03"
+            },
+            "steps": [
+              {
+                "token_in": "0x4200000000000000000000000000000000000006",
+                "token_out": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                "rate": 550000,
+                "protocol_id": "16",
+                "pool_address": "0x6bee1580471F38000951abd788A9C060A4ad3Ac3",
+                "swap_type": "0x03"
+              },
+              {
+                "token_in": "0x4200000000000000000000000000000000000006",
+                "token_out": "0xc2BC7A73613B9bD5F373FE10B55C59a69F4D617B",
+                "rate": 450000,
+                "protocol_id": "16",
+                "pool_address": "0x7dB1c9f51F2CB456f0c5d7E2F939Fa7f6B360142",
+                "swap_type": "0x03"
+              },
+              {
+                "token_in": "0xc2BC7A73613B9bD5F373FE10B55C59a69F4D617B",
+                "token_out": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                "rate": 1000000,
+                "protocol_id": "16",
+                "pool_address": "0xF3f75aDbd75CAf5230bf93f3A337Db848d03E0D3",
+                "swap_type": "0x03"
+              }
+            ]
+          }
+        },
+        {
+          "source": "baseswap-v3",
+          "stepCount": 1,
+          "request": {
+            "chainId": 8453,
+            "tokenIn": "0x4200000000000000000000000000000000000006",
+            "tokenOut": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "amountIn": "1000000000000000",
+            "inputDecimals": 18,
+            "outputDecimals": 6,
+            "destination": "0x000000000000000000000000000000000000bEEF",
+            "slippagePpm": "0",
+            "liquiditySources": [
+              "baseswap-v3"
+            ]
+          },
+          "blockNumber": "52300352",
+          "blockHash": "0x19b3407f0ed84e9c6f19354bd963c115883382d8998df17221ac236c2ebfa031",
+          "amountOut": "2574039",
+          "pools": [
+            {
+              "kind": "v3",
+              "address": "0x74cb6260Be6F31965C239Df6d6Ef2Ac2B5D4f020",
+              "token0": "0x4200000000000000000000000000000000000006",
+              "token1": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "protocolId": "17",
+              "router": "0x1B8eea9315bE495187D873DA7773a874545D9D48",
+              "quoter": "0x4fDBD73aD4B1DDde594BF05497C15f76308eFfb9",
+              "fee": 80,
+              "routerAbi": "original"
+            }
+          ],
+          "compiled": {
+            "route": {
+              "token_in": "0x4200000000000000000000000000000000000006",
+              "token_out": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "amount_in": "1000000000000000",
+              "min_received": "2574039",
+              "destination": "0x000000000000000000000000000000000000bEEF",
+              "swap_type": "0x03"
+            },
+            "steps": [
+              {
+                "token_in": "0x4200000000000000000000000000000000000006",
+                "token_out": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                "rate": 1000000,
+                "protocol_id": "17",
+                "pool_address": "0x74cb6260Be6F31965C239Df6d6Ef2Ac2B5D4f020",
+                "swap_type": "0x03"
+              }
+            ]
+          }
+        },
+        {
+          "source": "alienbase-v3",
+          "stepCount": 3,
+          "request": {
+            "chainId": 8453,
+            "tokenIn": "0x4200000000000000000000000000000000000006",
+            "tokenOut": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "amountIn": "1000000000000000",
+            "inputDecimals": 18,
+            "outputDecimals": 6,
+            "destination": "0x000000000000000000000000000000000000bEEF",
+            "slippagePpm": "0",
+            "liquiditySources": [
+              "alienbase-v3"
+            ]
+          },
+          "blockNumber": "52300352",
+          "blockHash": "0x19b3407f0ed84e9c6f19354bd963c115883382d8998df17221ac236c2ebfa031",
+          "amountOut": "2571760",
+          "pools": [
+            {
+              "kind": "v3",
+              "address": "0x1D6CfEe6eeC4688DAD33E6FBB2304a9eFe8BE3C8",
+              "token0": "0x4200000000000000000000000000000000000006",
+              "token1": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+              "protocolId": "18",
+              "router": "0xB20C411FC84FBB27e78608C24d0056D974ea9411",
+              "quoter": "0x353B1BEA22dd3B41c0Fc529Cf72D829F9493b23A",
+              "fee": 100,
+              "routerAbi": "router02"
+            },
+            {
+              "kind": "v3",
+              "address": "0x4ca59b56965385e14B3fd4d48Cd1741dC21E7343",
+              "token0": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "token1": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+              "protocolId": "18",
+              "router": "0xB20C411FC84FBB27e78608C24d0056D974ea9411",
+              "quoter": "0x353B1BEA22dd3B41c0Fc529Cf72D829F9493b23A",
+              "fee": 300,
+              "routerAbi": "router02"
+            },
+            {
+              "kind": "v3",
+              "address": "0xB27f110571c96B8271d91ad42D33A391A75E6030",
+              "token0": "0x4200000000000000000000000000000000000006",
+              "token1": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "protocolId": "18",
+              "router": "0xB20C411FC84FBB27e78608C24d0056D974ea9411",
+              "quoter": "0x353B1BEA22dd3B41c0Fc529Cf72D829F9493b23A",
+              "fee": 750,
+              "routerAbi": "router02"
+            }
+          ],
+          "compiled": {
+            "route": {
+              "token_in": "0x4200000000000000000000000000000000000006",
+              "token_out": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "amount_in": "1000000000000000",
+              "min_received": "2571760",
+              "destination": "0x000000000000000000000000000000000000bEEF",
+              "swap_type": "0x03"
+            },
+            "steps": [
+              {
+                "token_in": "0x4200000000000000000000000000000000000006",
+                "token_out": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+                "rate": 980000,
+                "protocol_id": "18",
+                "pool_address": "0x1D6CfEe6eeC4688DAD33E6FBB2304a9eFe8BE3C8",
+                "swap_type": "0x03"
+              },
+              {
+                "token_in": "0x4200000000000000000000000000000000000006",
+                "token_out": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                "rate": 20000,
+                "protocol_id": "18",
+                "pool_address": "0xB27f110571c96B8271d91ad42D33A391A75E6030",
+                "swap_type": "0x03"
+              },
+              {
+                "token_in": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+                "token_out": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                "rate": 1000000,
+                "protocol_id": "18",
+                "pool_address": "0x4ca59b56965385e14B3fd4d48Cd1741dC21E7343",
+                "swap_type": "0x03"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
