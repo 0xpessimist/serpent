@@ -5,6 +5,7 @@ import {Test} from "forge-std/Test.sol";
 import {SafeTransferLib} from "@solady/utils/SafeTransferLib.sol";
 import {Serpent} from "../../src/Serpent.sol";
 import {V3Wrapper} from "../../src/wrappers/V3Wrapper.sol";
+import {V3Wrapper02} from "../../src/wrappers/V3Wrapper02.sol";
 import {SolidlyWrapper} from "../../src/wrappers/SolidlyWrapper.sol";
 import {CurveStableNGWrapper} from "../../src/wrappers/CurveStableNGWrapper.sol";
 import {ILiquidityToken, ILiquidityQuoter, ILiquidityFactory} from "./LiquidityForks.t.sol";
@@ -13,6 +14,7 @@ interface IStableForkPool {
     function get_dy(int128, int128, uint256) external view returns (uint256);
     function coins(uint256) external view returns (address);
     function stable() external view returns (bool);
+    function fee() external view returns (uint24);
 }
 
 interface ISolidlyForkRouter {
@@ -38,16 +40,25 @@ abstract contract MajorLiquidityForkBase is Test {
     Serpent.RouteParam internal route;
     Serpent.SwapParams[] internal steps;
     address[] internal targets;
+    address[] internal quoters;
     uint256[] internal families; // 1 = Curve NG, 2 = Solidly, 3 = original V3.
     uint256 internal count;
 
     function _chain() internal pure virtual returns (uint256);
 
+    function _fixture() internal pure virtual returns (string memory) {
+        return "test/fixtures/major-liquidity.json";
+    }
+
+    function _routeCount() internal pure virtual returns (uint256) {
+        return _chain() == 8453 || _chain() == 999 ? 2 : 1;
+    }
+
     function setUp() public {
         vm.skip(!vm.envOr("RUN_MAJOR_LIQUIDITY_FORK", false), "Major liquidity forks are opt-in");
-        json = vm.readFile("test/fixtures/major-liquidity.json");
+        json = vm.readFile(_fixture());
         root = string.concat(".chains.", vm.toString(_chain()));
-        count = _chain() == 8453 || _chain() == 999 ? 2 : 1;
+        count = _routeCount();
     }
 
     function _load(uint256 index) internal {
@@ -77,6 +88,7 @@ abstract contract MajorLiquidityForkBase is Test {
         );
         delete steps;
         delete targets;
+        delete quoters;
         delete families;
         uint256 length = vm.parseJsonUint(json, string.concat(prefix, ".stepCount"));
         for (uint256 i; i < length; ++i) {
@@ -100,6 +112,7 @@ abstract contract MajorLiquidityForkBase is Test {
                     ? 2
                     : 3;
             targets.push(target);
+            quoters.push(family == 3 ? vm.parseJsonAddress(json, string.concat(pool, ".quoter")) : address(0));
             families.push(family);
             if (serpent.swappers(steps[i].protocol_id) == address(0)) {
                 address adapter = family == 1
@@ -122,13 +135,13 @@ abstract contract MajorLiquidityForkBase is Test {
     function _fundInput() private {
         address factory = _chain() == 1 || _chain() == 137
             ? 0x1F98431c8aD98523631AE4a59f267346ea31F984
-            : 0xf0db7b58379503491d857dB50AC9ece64c653918;
+            : 0x33128a8fC17869897dcE68Ed026d694621f6FDfD;
         address quoter = _chain() == 1 || _chain() == 137
             ? 0x61fFE014bA17989E743c5F6cB21bF9697530B21e
-            : 0x7DfD4F31be6814D2906BDE155c3e1B146EAc1468;
+            : 0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a;
         address router = _chain() == 1 || _chain() == 137
             ? 0xE592427A0AEce92De3Edee1F18E0157C05861564
-            : 0x7AdF4701AbCDBc5Dcf5Cb58B526f897e048F0D11;
+            : 0x2626664c2603336E57B271c5C0b26F421741e481;
         if (_chain() == 999) {
             factory = 0xFf7B3e8C00e57ea31477c32A5B52a58Eea47b072;
             quoter = 0x239F11a7A3E08f2B8110D4CA9F6B95d4c8865258;
@@ -155,7 +168,9 @@ abstract contract MajorLiquidityForkBase is Test {
             } catch {}
         }
         assertTrue(pool != address(0), "real funding pool is required");
-        serpent.addSwapper(100, address(new V3Wrapper(router, wrapped)));
+        serpent.addSwapper(
+            100, _chain() == 8453 ? address(new V3Wrapper02(router, wrapped)) : address(new V3Wrapper(router, wrapped))
+        );
         Serpent.RouteParam memory funding = Serpent.RouteParam(wrapped, route.token_in, amount, expected, user, 0x01);
         Serpent.SwapParams[] memory fundingSteps = new Serpent.SwapParams[](1);
         fundingSteps[0] = Serpent.SwapParams(wrapped, route.token_in, 1_000_000, 100, pool, 0x01);
@@ -265,8 +280,10 @@ abstract contract MajorLiquidityForkBase is Test {
             );
             return ISolidlyForkRouter(targets[index]).getAmountsOut(amount, path)[1];
         }
-        (uint256 out,,,) = ILiquidityQuoter(0x239F11a7A3E08f2B8110D4CA9F6B95d4c8865258)
-            .quoteExactInputSingle(ILiquidityQuoter.Params(input, output, amount, 500, 0));
+        (uint256 out,,,) = ILiquidityQuoter(quoters[index])
+            .quoteExactInputSingle(
+                ILiquidityQuoter.Params(input, output, amount, IStableForkPool(steps[index].pool_address).fee(), 0)
+            );
         return out;
     }
 

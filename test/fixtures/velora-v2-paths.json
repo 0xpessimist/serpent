@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "blockNumber": "26140756",
+  "blockHash": "0xf67658a51da9707188baaf1c37a877e2effb5be6913dff344077a815d3532753",
+  "request": {
+    "chainId": 1,
+    "tokenIn": "0x93ED3FBe21207Ec2E8f2d3c3de6e058Cb73Bc04d",
+    "tokenOut": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "inputDecimals": 18,
+    "outputDecimals": 6,
+    "amountIn": "1000000000000000000",
+    "destination": "0x000000000000000000000000000000000000bEEF",
+    "slippagePpm": "0",
+    "liquiditySources": [
+      "uniswap-v2"
+    ]
+  },
+  "pools": [
+    {
+      "kind": "v2",
+      "address": "0xaBdC325419c2A84A79986c60aB7475d6C4E78b53",
+      "token0": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "token1": "0x93ED3FBe21207Ec2E8f2d3c3de6e058Cb73Bc04d",
+      "protocolId": "1",
+      "router": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+      "reserve0": "9373895664386171253",
+      "reserve1": "1142394043201464621869"
+    },
+    {
+      "kind": "v2",
+      "address": "0xAE461cA67B15dc8dc81CE7615e0320dA1A9aB8D5",
+      "token0": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "token1": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "protocolId": "1",
+      "router": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+      "reserve0": "544526520291248093022672",
+      "reserve1": "544318709816"
+    }
+  ],
+  "compiled": {
+    "route": {
+      "token_in": "0x93ED3FBe21207Ec2E8f2d3c3de6e058Cb73Bc04d",
+      "token_out": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "amount_in": "1000000000000000000",
+      "min_received": "8146",
+      "destination": "0x000000000000000000000000000000000000bEEF",
+      "swap_type": "0x03"
+    },
+    "steps": [
+      {
+        "token_in": "0x93ED3FBe21207Ec2E8f2d3c3de6e058Cb73Bc04d",
+        "token_out": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "rate": 1000000,
+        "protocol_id": "1",
+        "pool_address": "0xaBdC325419c2A84A79986c60aB7475d6C4E78b53",
+        "swap_type": "0x03"
+      },
+      {
+        "token_in": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "token_out": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "rate": 1000000,
+        "protocol_id": "1",
+        "pool_address": "0xAE461cA67B15dc8dc81CE7615e0320dA1A9aB8D5",
+        "swap_type": "0x03"
+      }
+    ]
+  },
+  "amountOut": "8146"
+}

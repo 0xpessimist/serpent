@@ -1,0 +1,264 @@
+{
+  "schemaVersion": 1,
+  "chains": {
+    "999": {
+      "wrappedNative": "0x5555555555555555555555555555555555555555",
+      "routes": [
+        {
+          "source": "projectx-v3",
+          "label": "projectx",
+          "stepCount": 4,
+          "request": {
+            "chainId": 999,
+            "tokenIn": "0x5555555555555555555555555555555555555555",
+            "tokenOut": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+            "amountIn": "1000000000000000",
+            "inputDecimals": 18,
+            "outputDecimals": 6,
+            "destination": "0x000000000000000000000000000000000000bEEF",
+            "slippagePpm": "0",
+            "liquiditySources": [
+              "projectx-v3"
+            ]
+          },
+          "blockNumber": "47908858",
+          "blockHash": "0xbb10ea5c839bb935bc892084a5833c62633f5ac67df33fe4aae1560593b0b0a3",
+          "amountOut": "89180",
+          "pools": [
+            {
+              "kind": "v3",
+              "address": "0xbe352daF66af94ccF2012a154a67DAEF95FAcB91",
+              "token0": "0x5555555555555555555555555555555555555555",
+              "token1": "0xfD739d4e423301CE9385c1fb8850539D657C296D",
+              "protocolId": "6",
+              "router": "0x1EbDFC75FfE3ba3de61E7138a3E8706aC841Af9B",
+              "quoter": "0x239F11a7A3E08f2B8110D4CA9F6B95d4c8865258",
+              "fee": 100
+            },
+            {
+              "kind": "v3",
+              "address": "0x09dE938d3e788aF06fD6D0819Db9226150D4a0F3",
+              "token0": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
+              "token1": "0xfD739d4e423301CE9385c1fb8850539D657C296D",
+              "protocolId": "6",
+              "router": "0x1EbDFC75FfE3ba3de61E7138a3E8706aC841Af9B",
+              "quoter": "0x239F11a7A3E08f2B8110D4CA9F6B95d4c8865258",
+              "fee": 500
+            },
+            {
+              "kind": "v3",
+              "address": "0xA7E0a5De51BB8C1dB4997FaA0cF775466D059642",
+              "token0": "0x111111a1a0667d36bD57c0A9f569b98057111111",
+              "token1": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
+              "protocolId": "6",
+              "router": "0x1EbDFC75FfE3ba3de61E7138a3E8706aC841Af9B",
+              "quoter": "0x239F11a7A3E08f2B8110D4CA9F6B95d4c8865258",
+              "fee": 100
+            },
+            {
+              "kind": "v3",
+              "address": "0xB71cB9E2C7dbecC7AFa1964EcdA166d7dc476367",
+              "token0": "0x111111a1a0667d36bD57c0A9f569b98057111111",
+              "token1": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+              "protocolId": "6",
+              "router": "0x1EbDFC75FfE3ba3de61E7138a3E8706aC841Af9B",
+              "quoter": "0x239F11a7A3E08f2B8110D4CA9F6B95d4c8865258",
+              "fee": 100
+            }
+          ],
+          "compiled": {
+            "route": {
+              "token_in": "0x5555555555555555555555555555555555555555",
+              "token_out": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+              "amount_in": "1000000000000000",
+              "min_received": "89180",
+              "destination": "0x000000000000000000000000000000000000bEEF",
+              "swap_type": "0x03"
+            },
+            "steps": [
+              {
+                "token_in": "0x5555555555555555555555555555555555555555",
+                "token_out": "0xfD739d4e423301CE9385c1fb8850539D657C296D",
+                "rate": 1000000,
+                "protocol_id": "6",
+                "pool_address": "0xbe352daF66af94ccF2012a154a67DAEF95FAcB91",
+                "swap_type": "0x03"
+              },
+              {
+                "token_in": "0xfD739d4e423301CE9385c1fb8850539D657C296D",
+                "token_out": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
+                "rate": 1000000,
+                "protocol_id": "6",
+                "pool_address": "0x09dE938d3e788aF06fD6D0819Db9226150D4a0F3",
+                "swap_type": "0x03"
+              },
+              {
+                "token_in": "0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb",
+                "token_out": "0x111111a1a0667d36bD57c0A9f569b98057111111",
+                "rate": 1000000,
+                "protocol_id": "6",
+                "pool_address": "0xA7E0a5De51BB8C1dB4997FaA0cF775466D059642",
+                "swap_type": "0x03"
+              },
+              {
+                "token_in": "0x111111a1a0667d36bD57c0A9f569b98057111111",
+                "token_out": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+                "rate": 1000000,
+                "protocol_id": "6",
+                "pool_address": "0xB71cB9E2C7dbecC7AFa1964EcdA166d7dc476367",
+                "swap_type": "0x03"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "8453": {
+      "wrappedNative": "0x4200000000000000000000000000000000000006",
+      "routes": [
+        {
+          "source": "aerodrome",
+          "label": "aerodrome-volatile",
+          "stepCount": 1,
+          "request": {
+            "chainId": 8453,
+            "tokenIn": "0x4200000000000000000000000000000000000006",
+            "tokenOut": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "amountIn": "1000000000000000",
+            "inputDecimals": 18,
+            "outputDecimals": 6,
+            "destination": "0x000000000000000000000000000000000000bEEF",
+            "slippagePpm": "0",
+            "liquiditySources": [
+              "aerodrome"
+            ]
+          },
+          "blockNumber": "52295360",
+          "blockHash": "0x4fd9718fc5e5203405d895d4f713e28910cf7f50f212e5af9751e9e69f0d77ef",
+          "amountOut": "2554198",
+          "pools": [
+            {
+              "kind": "solidly",
+              "address": "0xcDAC0d6c6C59727a65F871236188350531885C43",
+              "token0": "0x4200000000000000000000000000000000000006",
+              "token1": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "factory": "0x420DD381b31aEf6683db6B902084cB0FFECe40Da",
+              "stable": false,
+              "router": "0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43",
+              "protocolId": "13"
+            }
+          ],
+          "compiled": {
+            "route": {
+              "token_in": "0x4200000000000000000000000000000000000006",
+              "token_out": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "amount_in": "1000000000000000",
+              "min_received": "2554198",
+              "destination": "0x000000000000000000000000000000000000bEEF",
+              "swap_type": "0x03"
+            },
+            "steps": [
+              {
+                "token_in": "0x4200000000000000000000000000000000000006",
+                "token_out": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                "rate": 1000000,
+                "protocol_id": "13",
+                "pool_address": "0xcDAC0d6c6C59727a65F871236188350531885C43",
+                "swap_type": "0x03"
+              }
+            ]
+          }
+        },
+        {
+          "source": "aerodrome",
+          "label": "aerodrome-stable",
+          "stepCount": 3,
+          "request": {
+            "chainId": 8453,
+            "tokenIn": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "tokenOut": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+            "amountIn": "10000000",
+            "inputDecimals": 6,
+            "outputDecimals": 6,
+            "destination": "0x000000000000000000000000000000000000bEEF",
+            "slippagePpm": "0",
+            "liquiditySources": [
+              "aerodrome"
+            ]
+          },
+          "blockNumber": "52295361",
+          "blockHash": "0xf2cb0be0a6920f5e9e1dce6e2ba6da3c3fe3313d65d690eb5e80c4c3cafe4ae1",
+          "amountOut": "9998756",
+          "pools": [
+            {
+              "kind": "solidly",
+              "address": "0x27a8Afa3Bd49406e48a074350fB7b2020c43B2bD",
+              "token0": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "token1": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+              "factory": "0x420DD381b31aEf6683db6B902084cB0FFECe40Da",
+              "stable": true,
+              "router": "0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43",
+              "protocolId": "13"
+            },
+            {
+              "kind": "solidly",
+              "address": "0x3548029694fbB241D45FB24Ba0cd9c9d4E745f16",
+              "token0": "0x4200000000000000000000000000000000000006",
+              "token1": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "factory": "0x420DD381b31aEf6683db6B902084cB0FFECe40Da",
+              "stable": true,
+              "router": "0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43",
+              "protocolId": "13"
+            },
+            {
+              "kind": "solidly",
+              "address": "0x44d7Dd237001AeF7fC7D8CB13ab4452f65CE5E40",
+              "token0": "0x4200000000000000000000000000000000000006",
+              "token1": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+              "factory": "0x420DD381b31aEf6683db6B902084cB0FFECe40Da",
+              "stable": true,
+              "router": "0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43",
+              "protocolId": "13"
+            }
+          ],
+          "compiled": {
+            "route": {
+              "token_in": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+              "token_out": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+              "amount_in": "10000000",
+              "min_received": "9998756",
+              "destination": "0x000000000000000000000000000000000000bEEF",
+              "swap_type": "0x03"
+            },
+            "steps": [
+              {
+                "token_in": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                "token_out": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+                "rate": 940000,
+                "protocol_id": "13",
+                "pool_address": "0x27a8Afa3Bd49406e48a074350fB7b2020c43B2bD",
+                "swap_type": "0x03"
+              },
+              {
+                "token_in": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                "token_out": "0x4200000000000000000000000000000000000006",
+                "rate": 60000,
+                "protocol_id": "13",
+                "pool_address": "0x3548029694fbB241D45FB24Ba0cd9c9d4E745f16",
+                "swap_type": "0x03"
+              },
+              {
+                "token_in": "0x4200000000000000000000000000000000000006",
+                "token_out": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+                "rate": 1000000,
+                "protocol_id": "13",
+                "pool_address": "0x44d7Dd237001AeF7fC7D8CB13ab4452f65CE5E40",
+                "swap_type": "0x03"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
